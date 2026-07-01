@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Normal Diet Table</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <style>
+        .form-check { margin-bottom: 8px; }
+        .hypo-normal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="mb-3">Normal Diet Options</h2>
+
+    <div id="normalDietTable">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        <span>Normal Diet (USES)</span>
+                    </th>
+                    <th>
+                        <span>HYPO NORMAL Diet (USES)</span>
+                    </th>
+                    <th>
+                        <span>OTHER</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!-- NORMAL -->
+                    <td>
+                        <div th:each="cat : ${normalCategories}">
+                            <p th:if="${cat.pdfLink}">
+                                <a th:href="@{${cat.pdfLink}}" target="_blank" th:text="${cat.name}"></a>
+                            </p>
+                            <div th:each="opt : ${cat.options}">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           th:name="normalDietOptions"
+                                           th:value="${opt.value}"
+                                           onchange="updateDietOrder(this)" />
+                                    <label class="form-check-label" th:text="${opt.label}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- HYPO -->
+                    <td>
+                        <div class="hypo-normal-grid">
+                            <div th:each="cat : ${hypoCategories}">
+                                <p th:if="${cat.pdfLink}">
+                                    <a th:href="@{${cat.pdfLink}}" target="_blank" th:text="${cat.name}"></a>
+                                </p>
+                                <div th:each="opt : ${cat.options}">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               th:name="hypoNormalDietOptions"
+                                               th:value="${opt.value}"
+                                               onchange="updateDietOrder(this)" />
+                                        <label class="form-check-label" th:text="${opt.label}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- OTHER -->
+                    <td>
+                        <div th:each="cat : ${otherCategories}">
+                            <div th:each="opt : ${cat.options}">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           th:name="otherDietOptions"
+                                           th:value="${opt.value}"
+                                           onchange="updateDietOrder(this)" />
+                                    <label class="form-check-label" th:text="${opt.label}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                        <div class="diet-suggestions">
+                            <a href="/pdf/diet suggestion 1.pdf" target="_blank">Diet suggestions 1</a> |
+                            <a href="/pdf/diet suggestion 2.pdf" target="_blank">Diet suggestions 2</a> |
+                            <a href="/pdf/hospital's intensive care. .pdf" target="_blank">Hospital's Intensive Care</a> |
+                            <a href="/pdf/Most common food-drug interaction.pdf" target="_blank">Most common food-drug interaction</a>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+    function updateDietOrder(element) {
+        console.log("Checked: ", element.checked, " - Value: ", element.value);
+        // تقدر تبعت القيمة دي للسيرفر لو محتاج
+    }
+</script>
+
+</body>
+</html>

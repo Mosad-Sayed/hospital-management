@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Child Diet Option</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --input-focus-color: rgba(52, 152, 219, 0.25);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.25);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            margin-bottom: 15px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.25);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e67e22;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .hidden-id {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0;
+            }
+            
+            .card {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Edit Child Diet Option</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/child-diet/update}" method="post" th:object="${childDietOption}">
+                    <input type="hidden" th:field="*{id}" class="hidden-id">
+                    
+                    <div class="form-group">
+                        <label for="category" class="form-label required-field">Category</label>
+                        <select class="form-select" id="category" th:field="*{category}" required>
+                            <option th:each="cat : ${T(com.example.hospitalmanagements.entity.ChildDietOption.Category).values()}" 
+                                    th:value="${cat}" 
+                                    th:text="${cat}"
+                                    th:selected="${cat == childDietOption.category}"></option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="label" class="form-label required-field">Label</label>
+                        <input type="text" class="form-control" id="label" th:field="*{label}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="value" class="form-label required-field">Value</label>
+                        <input type="text" class="form-control" id="value" th:field="*{value}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderIndex" class="form-label required-field">Order Index</label>
+                        <input type="number" class="form-control" id="orderIndex" th:field="*{orderIndex}" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="/child-diet" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Option</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('[required]');
+                
+                requiredFields.forEach(function(field) {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'var(--danger-color)';
+                        
+                        // Add error message if not already present
+                        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('error-message')) {
+                            const errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.style.color = 'var(--danger-color)';
+                            errorMsg.style.fontSize = '0.8rem';
+                            errorMsg.style.marginTop = '-10px';
+                            errorMsg.style.marginBottom = '15px';
+                            errorMsg.textContent = 'This field is required';
+                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                        }
+                    } else {
+                        field.style.borderColor = 'var(--border-color)';
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = form.querySelector('[required]:invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+            
+            // Clear error styles when user starts typing
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.style.borderColor = 'var(--border-color)';
+                        const errorMsg = this.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

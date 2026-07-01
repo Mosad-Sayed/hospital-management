@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patient Filter</title>
+</head>
+<body>
+    <form th:action="@{/patients/filter}" method="get">
+        <label><input type="checkbox" name="pattern" value="N"> N</label>
+        <label><input type="checkbox" name="pattern" value="C"> C</label>
+        <label><input type="checkbox" name="pattern" value="S"> S</label>
+        <label><input type="checkbox" name="pattern" value="NF"> NF</label>
+        <button type="submit">تصفية</button>
+    </form>
+    <div>
+        <h3>نتائج البحث:</h3>
+        <ul>
+            <li th:each="patient : ${patients}" th:text="${patient.name}">اسم المريض</li>
+        </ul>
+    </div>
+</body>
+</html>

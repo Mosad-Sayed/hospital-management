@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل المستخدم</title>
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-5">
+            <div class="card-header text-center bg-primary text-white">
+                <h2>تعديل المستخدم</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/patients/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <input type="text" id="username" name="username" class="form-control" th:value="*{username}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">كلمة المرور</label>
+                        <input type="password" id="password" name="password" class="form-control" th:value="*{password}" required>
+                    </div>
+					<div class="mb-3">
+					    <label for="department" class="form-label">القسم</label>
+					    <select id="department" name="department" class="form-select" required>
+					        <option value="PEDIATRICS" th:selected="${user.department} == 'PEDIATRICS'">Pedia</option>
+					        <option value="NURSERY" th:selected="${user.department} == 'NURSERY'">Nursery</option>
+					        <option value="DIETARY" th:selected="${user.department} == 'DIETARY'">Dietary</option>
+					        <option value="MS" th:selected="${user.department} == 'MS'">MS</option>
+					        <option value="MM" th:selected="${user.department} == 'MM'">MM</option>
+					        <option value="ICU" th:selected="${user.department} == 'ICU'">ICU</option>
+					        <option value="CCU" th:selected="${user.department} == 'CCU'">CCU</option>
+					        <option value="OB" th:selected="${user.department} == 'OB'">OB</option>
+					        <option value="AKU1" th:selected="${user.department} == 'AKU1'">AKU1</option>
+							<option value="AKU2" th:selected="${user.department} == 'AKU2'">AKU2</option>
+
+					        <option value="FS" th:selected="${user.department} == 'FS'">FS</option>
+					        <option value="FM" th:selected="${user.department} == 'FM'">FM</option>
+					    </select>
+					</div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <a href="/patients/users" class="btn btn-secondary">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

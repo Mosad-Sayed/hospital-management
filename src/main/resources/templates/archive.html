@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Archived Patients</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	      <link rel="stylesheet" href="/assets/css/all.min.css">
+		   <style>
+        body {
+            background-color: #e8f5e9; /* خلفية خضراء فاتحة */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333; /* لون النص الأساسي */
+        }
+        .container {
+            margin-top: 30px;
+            padding: 0 15px;
+            max-width: 1200px; /* تحديد أقصى عرض */
+            margin-left: auto; 
+            margin-right: auto; /* المركز الأفقية للمحتوى */
+        }
+        .text-center {
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-size: 34px;
+            color: #004d40; /* لون أخضر داكن */
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* تأثير الظل للنص */
+        }
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-card {
+            width: 100%;
+            max-width: 1000px; /* تحديد أقصى عرض للبطاقة */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للبطاقة */
+        }
+        .search-card .card-body {
+            padding: 20px; /* زيادة الحشو */
+        }
+        .search-container input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 25px;
+            border: 1px solid #80cbc4; /* لون أخضر فاتح */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .search-container input:focus {
+            border-color: #004d40; /* تغيير اللون عند التركيز */
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);
+        }
+		.table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-top: 20px;
+		}
+
+		.table-striped > tbody > tr:nth-of-type(odd) {
+		    background-color: #f1f8f6; /* لون خلفية للصفوف المتبادلة */
+		}
+
+		.table th, .table td {
+		    padding: 15px;
+		    text-align: center;
+		    vertical-align: middle;
+		    border-bottom: 1px solid #ddd;
+		}
+
+		.table th {
+		    position: sticky; /* تثبيت رأس الجدول */
+		    top: 0; /* يثبت الرأس عند أعلى الجدول */
+		    background-color: #004d40; /* لون الخلفية لرأس الجدول */
+		    color: white; /* لون النص */
+		    z-index: 1; /* يضمن أن الرأس يظل فوق باقي الجدول */
+			white-space: nowrap; /* منع تجاوز النص */
+
+		}
+
+        .table-hover tbody tr:hover {
+            background-color: #d0f4ea;
+            cursor: pointer;
+            transform: scale(1.02); /* تكبير الطفيف عند المرور */
+        }
+        .btn-success {
+            background-color: #004d40;
+            border-color: #004d40;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-success:hover {
+            background-color: #00332b;
+            border-color: #00332b;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 150, 136, 0.3);
+        }
+        .btn-success:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        .restore-button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        .restore-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
+            background-color: #00332b; /* تغيير اللون عند التمرير */
+        }
+        .back-button {
+            display: block;
+            margin-bottom: 15px;
+            background-color: #004d40;
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #00332b;
+            transform: scale(1.05);
+        }
+        @media print {
+     #searchInput,
+    .btn, 
+    .search-container, 
+    #action, 
+    .navbar, /* افتراضياً إذا كان هناك شريط تنقل */
+    .footer { /* افتراضياً إذا كان هناك تذييل */
+        display: none !important;
+    }
+	.table {
+	       transform: translateX(-1px);
+	       border: 2px solid black !important;
+	       border-collapse: collapse;
+	       }
+	       .table th {
+	       background-color: #d3d3d3  !important; /* لون خلفية الرأس عند الطباعة */
+	       color: black !important; /* لون نص الرأس عند الطباعة */
+	       text-align: center;
+	       vertical-align: middle;
+	       padding: 15px 10px;
+	       white-space: nowrap;
+	       -webkit-print-color-adjust: exact; /* تأكيد الطباعة الدقيقة للألوان */
+	       print-color-adjust: exact;
+		 position: static; /* إلغاء التثبيت للطباعة */
+
+	       }
+	       .table th, .table td {
+	       border: 1px solid black !important;
+	       padding: 8px;
+	       text-align: center; /* توسيط النص */
+	       vertical-align: middle; /* توسيط عمودي للنص */
+	       }
+		   .back-button{
+			display: none;
+
+			
+		   }
+}
+       .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff; /* لون الزر */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button i {
+            margin-right: 8px; /* مسافة بين الأيقونة والنص */
+        }
+
+        /* تغيير لون الزر عند التمرير عليه */
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* تنسيق مجموعة الأزرار */
+        .button-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+		.restore-button {
+		    margin-right: 5px;
+		    padding: 8px 12px;
+		    font-size: 14px;
+		}
+
+		.delete-button {
+		    padding: 8px 12px;
+		    font-size: 14px;
+		}
+
+		.btn-primary.restore-button {
+		    background-color: #28a745;
+		    border-color: #28a745;
+		}
+
+		.btn-primary.restore-button:hover {
+		    background-color: #218838;
+		    border-color: #1e7e34;
+		}
+		.btn-sm {
+		    padding: 0.25rem 0.5rem;
+		    font-size: 0.875rem;
+		    line-height: 1.5;
+		    border-radius: 0.2rem;
+		}
+
+		.btn-success {
+		    background-color: #28a745;
+		    border-color: #28a745;
+		}
+
+		.btn-primary {
+		    background-color: #007bff;
+		    border-color: #007bff;
+		}
+
+		.btn-danger {
+		    background-color: #dc3545;
+		    border-color: #dc3545;
+		}
+
+		.btn {
+		    margin-right: 5px;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Archived Patients</h2>
+        <div class="search-container">
+            <div class="card search-card">
+                <div class="card-body">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search">
+                </div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="back-button" onclick="window.history.back();">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="back-button" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+        <table class="table table-striped table-hover" id="patientsTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File No</th>  
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Room</th>
+                    <th>Bed</th>
+                    <th>Diagnosis</th>
+                    <th>Diet Order</th>
+                    <th>Admission Date</th>
+                    <th>Companion Name</th>
+                    <th>Section</th>
+					<th>Deletion time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="patientTableBody">
+                <tr th:each="patient : ${archivedPatients}">
+                    <td></td>
+                    <td th:text="${patient.fileNo}"></td>
+                    <td th:text="${patient.nameOfPatient}"></td>
+                    <td th:text="${patient.age}"></td>
+                    <td th:text="${patient.room}"></td>
+                    <td th:text="${patient.bed}"></td>
+                    <td th:text="${patient.diagnosis}"></td>
+                    <td th:text="${patient.dietOrder}"></td>
+                    <td th:text="${patient.admissionDate}"></td>
+                    <td th:text="${patient.companionName}"></td>
+                    <td th:text="${patient.registeredByDepartment}"></td>
+					<td th:text="${patient.archivedAt}"></td>
+					<td>
+					    <!-- زر الاستعادة مع التعديل (GET) -->
+					    <a th:href="@{'/patients/restore-and-edit/' + ${patient.id}}" 
+					       class="btn btn-success btn-sm"
+					       onclick="return confirm('Restore and edit this patient?')">
+					        <i class="fas fa-edit"></i> Restore & Edit
+					    </a>
+					    
+					    <!-- زر الاستعادة المباشرة (POST) -->
+					    <form th:action="@{'/patients/restore-direct/' + ${patient.id}}" 
+					          method="post"
+					          style="display: inline-block; margin-left: 5px;">
+					        <button type="submit" 
+					                class="btn btn-primary btn-sm"
+					                onclick="return confirm('Restore this patient without editing?')">
+					            <i class="fas fa-check"></i> Restore
+					        </button>
+					    </form>
+					    
+					    <!-- زر الحذف (DELETE) -->
+					    <form th:action="@{'/patients/delete/' + ${patient.id}}" 
+					          method="post"
+					          style="display: inline-block; margin-left: 5px;">
+					        <input type="hidden" name="_method" value="delete" />
+					        <button type="submit" 
+					                class="btn btn-danger btn-sm"
+					                onclick="return confirm('Permanently delete this patient?')">
+					            <i class="fas fa-trash-alt"></i> Delete
+					        </button>
+					    </form>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#patientTableBody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const matches = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchTerm));
+                row.style.display = matches ? '' : 'none';
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var table = document.getElementById("patientsTable");
+            var rows = Array.from(table.querySelectorAll("tbody tr"));
+
+            rows.reverse().forEach(function(row) {
+                table.querySelector("tbody").appendChild(row);
+            });
+
+            var serialNoCells = table.querySelectorAll("tbody tr td:first-child");
+            serialNoCells.forEach((cell, index) => {
+                cell.textContent = rows.length - index;
+            });
+        });
+
+		function deletePatient(id) {
+		    if (confirm("هل أنت متأكد أنك تريد حذف هذا المريض؟")) {
+		        fetch(`/patients/delete/${id}`, {
+		            method: 'DELETE',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            }
+		        })
+		        .then(response => {
+		            if (response.ok) {
+		                alert("تم حذف المريض بنجاح");
+		                // تحديث الواجهة بعد الحذف
+		                location.reload(); // إعادة تحميل الصفحة لتحديث البيانات
+		            } else {
+		                alert("فشل حذف المريض: " + response.statusText);
+		            }
+		        })
+		        .catch(error => {
+		            console.error('خطأ:', error);
+		            alert("حدث خطأ أثناء حذف المريض.");
+		        });
+		    }
+		}
+    </script>
+	<script>
+		// في صفحة الأرشيف
+		function confirmRestoreAndEdit(url) {
+		    if (confirm('Restore patient and go to edit page?')) {
+		        window.location.href = url;
+		    }
+		}
+	</script>
+</body>
+</html>

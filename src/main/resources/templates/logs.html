@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Addition Log</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	      <link rel="stylesheet" href="/assets/css/all.min.css">
+		   <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            margin-bottom: 0;
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+        }
+		.table th {
+								    position: sticky; /* تثبيت رأس الجدول */
+								    top: 0; /* يثبت الرأس عند أعلى الجدول */
+								    background-color: #004d40; /* لون الخلفية لرأس الجدول */
+								    color: white; /* لون النص */
+								    z-index: 1; /* يضمن أن الرأس يظل فوق باقي الجدول */
+									white-space: nowrap; /* منع تجاوز النص */
+
+								}
+        td {
+            text-align: center;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .action-icons i {
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 1.2em;
+        }
+        .action-icons i:hover {
+            color: #c82333;
+        }
+        .btn-back {
+            margin-bottom: 20px;
+        }
+                @media print {
+     #searchInput,
+    .btn, 
+    .search-container, 
+    #action, 
+    .navbar, /* افتراضياً إذا كان هناك شريط تنقل */
+    .footer { /* افتراضياً إذا كان هناك تذييل */
+        display: none !important;
+    }
+	.table th {
+	       background-color: #d3d3d3  !important; /* لون خلفية الرأس عند الطباعة */
+	       color: black !important; /* لون نص الرأس عند الطباعة */
+	       text-align: center;
+	       vertical-align: middle;
+	       padding: 15px 10px;
+	       white-space: nowrap;
+		 position: static; /* إلغاء التثبيت للطباعة */
+
+	       }
+}
+  
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="javascript:history.back()" class="btn btn-primary btn-back">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+         <a href="javascript:window.print()" class="btn btn-primary btn-back">
+            <i class="fas fa-print"></i> Print
+        </a>
+        <h1 class="text-center mb-4">Patient Addition Log</h1>
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by Username or Patient File Number">
+        </div>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Addition Date</th>
+                    <th>Department</th>
+                    <th>Patient File Number</th>
+                    <th id="action">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody">
+                <tr th:each="log, iterStat : ${logs}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${log.userName}"></td>
+                    <td th:text="${log.additionDate}"></td>
+                    <td th:text="${log.departmentName}"></td>
+                    <td th:text="${log.patientFileNo}"></td>
+                    <td  id="action" class="action-icons">
+                        <a href="#" th:href="@{/patients/deleteAddationlog(id=${log.id})}" onclick="return confirm('Are you sure you want to delete this log?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var searchValue = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#logTableBody tr');
+            rows.forEach(function (row) {
+                var username = row.cells[1].textContent.toLowerCase();
+                var fileNo = row.cells[4].textContent.toLowerCase();
+                if (username.includes(searchValue) || fileNo.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+	
+</body>
+</html>

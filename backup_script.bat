@@ -1,0 +1,1 @@
+mysqldump -u root -p hospital_management > "C:\folder1\hospital_management_backup_2024-08-05.sql"

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Diet Plan</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 70px auto 30px;
+            padding: 0 20px;
+        }
+        
+        /* Stylish Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #3a5a8a;
+            transform: translateX(-3px) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        
+        .back-btn:active {
+            transform: translateX(-3px) scale(0.98);
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: none;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: none;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+            outline: none;
+        }
+        
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+        
+        .form-switch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-switch .form-check-input {
+            width: 50px;
+            height: 26px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: #e9ecef;
+            border: none;
+        }
+        
+        .form-switch .form-check-input:checked {
+            background-color: var(--primary-color);
+        }
+        
+        .form-switch .form-check-label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 80px;
+            }
+            
+            .back-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column-reverse;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Stylish Back Button -->
+<button class="back-btn" onclick="window.history.back()">←</button>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Edit Diet Plan</h3>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/diets/update}" method="post">
+                <!-- Hidden ID Field -->
+                <input type="hidden" name="id" th:value="${dietOption.id}">
+                
+                <!-- Current Category -->
+                <div class="mb-3">
+                    <label class="form-label">Current Category</label>
+                    <input type="text" class="form-control" th:value="${dietOption.category.name}" readonly>
+                </div>
+                
+                <!-- Label Field -->
+                <div class="mb-3">
+                    <label for="label" class="form-label">Display Name</label>
+                    <input type="text" class="form-control" id="label" name="label"
+                           th:value="${dietOption.label}" required>
+                </div>
+                
+                <!-- Value Field -->
+                <div class="mb-3">
+                    <label for="value" class="form-label">Value</label>
+                    <input type="text" class="form-control" id="value" name="value"
+                           th:value="${dietOption.value}" required>
+                </div>
+                
+                <!-- Active Status -->
+                <div class="mb-3 form-switch">
+                    <input class="form-check-input" type="checkbox" id="active" name="active"
+                           th:checked="${dietOption.active}">
+                    <label class="form-check-label" for="active">Active Status</label>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="btn-group">
+                    <a th:href="@{/admin/diets}" class="btn btn-secondary">
+                        Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Form input animations
+        const inputs = document.querySelectorAll('.form-control:not([readonly])');
+        
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-3px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = '';
+            });
+        });
+        
+        // Button hover effects
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+        
+        // Back button click effect
+        const backBtn = document.querySelector('.back-btn');
+        backBtn.addEventListener('mousedown', function() {
+            this.style.transform = 'translateX(-5px) scale(0.95)';
+        });
+        
+        backBtn.addEventListener('mouseup', function() {
+            this.style.transform = 'translateX(-3px) scale(1.1)';
+        });
+    });
+</script>
+</body>
+</html>

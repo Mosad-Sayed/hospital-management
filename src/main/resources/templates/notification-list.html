@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>قائمة الإشعارات</title>
+    <!-- Include FontAwesome -->
+	     <link rel="stylesheet" href="/assets/css/all.min.css">
+	    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            color: blue;
+            display: inline-block;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .notification-card {
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            z-index: 1000;
+            display: none;
+            width: 300px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-card h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .notification-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-list li .notification-info {
+            flex: 1;
+        }
+
+        .notification-list li .notification-actions {
+            flex-shrink: 0;
+        }
+
+        .notification-list li .notification-actions form {
+            display: inline;
+        }
+
+        .notification-list li .notification-actions button {
+            padding: 5px 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .notification-list li .notification-actions button:hover {
+            background-color: darkblue;
+        }
+
+        .read-btn {
+            background-color: #4CAF50; /* لون زر تم القراءة */
+        }
+
+        .read-btn:hover {
+            background-color: #45a049; /* تغيير لون الخلفية عندما يكون المؤشر فوقه */
+        }
+    </style>
+    <script>
+        function toggleNotifications() {
+            var notificationCard = document.getElementById("notificationCard");
+            if (notificationCard.style.display === "block") {
+                notificationCard.style.display = "none";
+            } else {
+                notificationCard.style.display = "block";
+            }
+        }
+
+        function markAsRead(event, notificationId) {
+            event.preventDefault(); // Prevent form submission
+
+            var form = event.target.closest('form');
+            var notificationItem = form.closest('li');
+            var notificationCountElement = document.querySelector(".notification-count");
+
+            // Send AJAX request to update notification status
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", form.action, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Hide the notification item
+                    notificationItem.style.display = 'none';
+
+                    // Update the notification count
+                    updateNotificationCount();
+                }
+            };
+            xhr.send(new URLSearchParams(new FormData(form)).toString());
+        }
+
+        function updateNotificationCount() {
+            var notificationItems = document.querySelectorAll('.notification-list li');
+            var unreadCount = 0;
+
+            notificationItems.forEach(function(item) {
+                if (item.style.display !== 'none') {
+                    unreadCount++;
+                }
+            });
+
+            var notificationCountElement = document.querySelector(".notification-count");
+            notificationCountElement.textContent = unreadCount;
+        }
+
+        // Update the count on page load
+        window.onload = function() {
+            updateNotificationCount();
+        };
+    </script>
+</head>
+<body>
+    <h1>قائمة الإشعارات</h1>
+    <div class="notification-icon" onclick="toggleNotifications()">
+        <i class="fas fa-bell"></i> <!-- FontAwesome Bell Icon -->
+        <span class="notification-count"></span>
+    </div>
+
+    <div class="notification-card" id="notificationCard">
+        <h2>الإشعارات الجديدة</h2>
+        <ul class="notification-list">
+            <li th:each="notification : ${notifications}" th:if="${notification.status != 'read'}" id="notification-${notification.id}">
+                <div class="notification-info">
+                <span>pediatrics department</span><br>
+                    <span th:text="${notification.mealType}"></span> -
+                    <span th:text="${notification.date}"></span> -
+                    <span th:text="${notification.day}"></span>
+                </div>
+                <div class="notification-actions">
+                    <form th:action="@{/updateNotificationStatus}" method="post" onsubmit="markAsRead(event, ${notification.id})">
+                        <input type="hidden" name="id" th:value="${notification.id}" />
+                        <input type="hidden" name="status" value="read" />
+                        <button type="submit" class="read-btn">تم القراءة</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

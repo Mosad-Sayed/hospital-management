@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <title>FM Department - Patient Management</title>
+      <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/assets/css/all.min.css">
+      <style>
+.header-right{
+	
+	margin-right:80px;
+
+}
+.header-left{
+	
+	margin-left:80px;
+
+}
+		.notification-icon{
+			
+			margin-left:100px;
+
+		}
+		.no-print{
+			margin-left:100px;
+			
+		}
+         .search-container {
+         text-align: center;
+         }
+         #searchInput {
+         width: 80%;
+         max-width: 400px;
+         padding: 12px;
+         border: 2px solid #007bff;
+         border-radius: 25px; /* جعل الحواف مستديرة أكثر */
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         font-size: 16px;
+         text-align: center;
+         margin-top: 10px; /* توازن المسافة من الأعلى */
+         margin-bottom: 20px;
+         outline: none; /* إزالة إطار التحديد الافتراضي */
+         transition: border-color 0.3s, box-shadow 0.3s; /* إضافة تأثير الانتقال */
+         }
+         #searchInput:focus {
+         border-color: #0056b3; /* تغيير لون الحدود عند التركيز */
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* تحسين الظل عند التركيز */
+         }
+         .profile-icon {
+         position: fixed;
+         top: 10px;
+         right: 10px;
+         cursor: pointer;
+         display: flex;
+         align-iteFM: center;
+         border: 2px solid #007bff;
+         border-radius: 50px;
+         padding: 5px;
+         background-color: #f8f9fa;
+         transition: background-color 0.3s;
+         }
+         .profile-icon:hover {
+         background-color: #e2e6ea;
+         }
+         .profile-icon img {
+         width: 40px; /* تحديد العرض الجديد */
+         height: 40px; /* تحديد الارتفاع الجديد */
+         border-radius: 50%;
+         }
+         .profile-dropdown {
+         display: none;
+         position: fixed;
+         top: 60px;
+         right: 10px;
+         background-color: #ffffff;
+         border: 1px solid #ccc;
+         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+         border-radius: 8px;
+         padding: 15px;
+         z-index: 1000;
+         }
+         .profile-dropdown p {
+         margin: 0 0 10px 0;
+         }
+         .profile-dropdown form {
+         margin: 0;
+         }
+         .hidden {
+         display: none;
+         }
+         .menu-only {
+         display: block;
+         }
+         .menu-hidden {
+         display: none;
+         }
+         body {
+         background-color: #f8f9fa;
+         }
+         .container {
+         margin-top: 50px;
+         }
+         .patient-list {
+         margin-top: 20px;
+         text-align: center; /* Center align the table */
+         }
+         .table {
+         margin-top: 20px;
+         border-collapse: collapse; /* Collapse table borders */
+         width: 90%;
+         margin: auto; /* Center the table */
+		 margin-bottom:100px;
+         }
+         .table th,
+         .table td {
+         border: 1px solid #dddddd; /* Add borders */
+         padding: 8px; /* Add padding */
+         text-align: center; /* Center align text */
+         }
+		 .table th {
+		          background-color: #343a40; /* لون خلفية الرأس */
+		          color: white; /* لون نص الرأس */
+		          text-align: center; /* محاذاة النص أفقيًا في المنتصف */
+		          vertical-align: middle; /* محاذاة النص عموديًا في المنتصف */
+		          padding: 15px 10px; /* المسافة حول النص */
+		          white-space: nowrap;
+				  position: sticky; /* تثبيت عناوين الجدول */
+				  		    top: 0; /* تحديد موقع التثبيت من الأعلى */
+				  		    z-index: 1; /* لضمان بقاء العناوين فوق المحتوى عند التمرير */
+		          }
+         .page-header {
+         display: flex;
+         justify-content: space-between;
+         align-iteFM: center;
+         margin-bottom: 20px;
+         }
+         .header-left {
+         text-align: left;
+         }
+         .header-center {
+         text-align: center;
+         }
+         .header-right {
+         text-align: right;
+         }
+         .pattern-feeds {
+         display: flex;
+         justify-content: space-around;
+         }
+         .pattern-feeds div {
+         width: 30px;
+         text-align: center;
+         }
+         /* إضافة خط الفاصل */
+         .pattern-feeds div:not(:last-child) {
+         position: relative; /* إضافة position: relative للعنصر الأساسي */
+         }
+         .pattern-feeds div:not(:last-child)::after {
+         content: "";
+         position: absolute;
+         top: 0; /* بدء الخط من الأعلى */
+         right: 0; /* تحديد موقع الخط على اليمين */
+         height: 100%; /* ارتفاع الخط على طول العنصر */
+         border-right: 1px solid #1a1110; /* خصائص الخط */
+         }
+         @media print {
+         ::-webkit-scrollbar {
+         display: none;
+         }
+         /* Print settings */
+         .no-print {
+         display: none; /* Hide unnecessary buttons and elements when printing */
+         }
+         }
+         .notification-icon {
+         cursor: pointer;
+         font-size: 24px; /* Increase icon size */
+         color: blue; /* Set icon color */
+         }
+         .notification-form {
+         display: none;
+         max-width: 500px;
+         margin: 0 auto;
+         padding: 20px;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         background-color: #f9f9f9;
+         }
+         .form-group {
+         margin-bottom: 15px;
+         }
+         .form-group label {
+         display: block;
+         margin-bottom: 5px;
+         }
+         .form-group input[type="text"], 
+         .form-group input[type="date"] {
+         width: calc(100% - 20px);
+         padding: 8px;
+         border: 1px solid #ccc;
+         border-radius: 3px;
+         font-size: 14px;
+         }
+         .form-group select {
+         width: calc(100% - 20px);
+         padding: 8px;
+         border: 1px solid #ccc;
+         border-radius: 3px;
+         font-size: 14px;
+         }
+         .form-group .btn-submit {
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         padding: 10px 20px;
+         text-align: center;
+         text-decoration: none;
+         display: inline-block;
+         font-size: 16px;
+         margin-top: 10px;
+         cursor: pointer;
+         border-radius: 3px;
+         }
+         .notification-list {
+         margin-top: 20px;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         padding: 10px;
+         background-color: #fff;
+         }
+         .notification-list ul {
+         list-style-type: none;
+         padding: 0;
+         }
+         .notification-list li {
+         margin-bottom: 5px;
+         }
+         @media print {
+         #searchInput,
+         .btn,
+         .search-container,
+         #action,
+         .navbar,
+         #notificationForm,
+		 .gallery  {
+         display: none !important;
+         }
+         .table {
+         transform: translateX(-1px);
+         border: 2px solid black !important;
+         border-collapse: collapse;
+         }
+         .table th {
+         background-color: #d3d3d3  !important; /* لون خلفية الرأس عند الطباعة */
+         color: black !important; /* لون نص الرأس عند الطباعة */
+         text-align: center;
+         vertical-align: middle;
+         padding: 15px 10px;
+         white-space: nowrap;
+         -webkit-print-color-adjust: exact; /* تأكيد الطباعة الدقيقة للألوان */
+         print-color-adjust: exact;
+		 position: static; /* إلغاء التثبيت للطباعة */
+
+         }
+         .table th, .table td {
+         border: 1px solid black !important;
+         padding: 8px;
+         text-align: center; /* توسيط النص */
+         vertical-align: middle; /* توسيط عمودي للنص */
+         }
+		 .signature-section {
+		          display: block !important;
+		          }
+				  #total1,#total,#totalCompanion,#totalpattern{
+				  			background-color: #343a40 !important; /* لون خلفية الرأس عند الطباعة */
+				  			font-weight: bold;
+				  			color:black !important;
+				  		 }
+         }
+         /* تحسين تنسيق معلومات التوقيع */
+         .signature-section {
+         margin-top: 10px;
+         width: 100%;
+		 display: none
+         }
+         .signature-container {
+         display: flex;
+         justify-content: space-between;
+         flex-wrap: wrap; /* يسمح بالتفاف العناصر عند الحاجة */
+         }
+         .signature-column {
+         width: 23%; /* عرض كل عمود أقل من 25% لتجنب التصاق العناصر */
+         margin-bottom: 20px;
+         }
+         .signature-row {
+         margin-bottom: 15px;
+         }
+         .signature-label {
+         display: block;
+         font-weight: bold;
+         margin-bottom: 5px;
+         position: relative;
+         right: -120px; /* اضبط هذه القيمة لتحريك العنصر إلى اليمين */
+         }
+         .signature-field {
+         display: block;
+         width: calc(100% - 10px);
+         padding-left: 15px;
+         position: relative;
+         right: -70px; /* اضبط هذه القيمة لتحريك العنصر إلى اليسار */
+         }
+         .signature-title {
+         font-weight: bold;
+         margin-bottom: 15px;
+         text-align: center;
+         color:red;
+         }
+		 #total1,#total,#totalCompanion,#totalpattern{
+			background-color: #343a40  !important; /* لون خلفية الرأس عند الطباعة */
+			font-weight: bold;
+			color:white;
+		 }
+		 .meal-options {
+		     display: flex;
+		     flex-wrap: wrap; /* السماح للعناصر بالانتقال لسطر جديد */
+		     justify-content: center; /* لتمركز العناصر أفقيًا */
+		     gap: 30px; /* المسافة بين كل خيار وجبة */
+		     margin-top: 20px; /* مسافة بين الخيارات وبقية النموذج */
+		 }
+
+		 .meal-options label {
+		     display: flex;
+		     align-items: center;
+		     gap: 10px; /* المسافة بين مربع الاختيار والنص */
+		     font-size: 1.2em; /* تكبير حجم النص */
+		     width: calc(33.33% - 20px); /* تحديد العرض ليكون 3 في الصف */
+		     box-sizing: border-box; /* لضمان عدم كسر التصميم بسبب الحواف */
+		     justify-content: center; /* لتوسيط المحتوى داخل كل خيار */
+		 }
+
+		 .meal-options input[type="checkbox"] {
+		     width: 20px; /* تكبير حجم مربع الاختيار */
+		     height: 20px;
+		 }
+
+		 .gallery {
+		     display: flex;
+		     gap: 20px;
+		     justify-content: center;  /* توسيط الصور أفقيًا */
+		     align-items: center;      /* توسيط الصور عموديًا (إذا كان الحاوية تحتوي على عدة صفوف) */
+		     flex-wrap: wrap; 
+			 margin-top:20px;         /* لتوزيع الصور بشكل مناسب عند استخدام عدة صفوف */
+		 }
+
+		 .gallery img {
+		     width: 750px;
+		     height: auto;
+		     cursor: pointer;
+		     border: 2px solid #ccc;
+		     border-radius: 5px;
+		     transition: transform 0.3s ease, box-shadow 0.3s ease;
+		 }
+
+		 .gallery img:hover {
+		     transform: scale(1.05);
+		     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+		 }
+
+		 /* نافذة العرض */
+		 .modal {
+		     display: none;
+		     position: fixed;
+		     top: 0;
+		     left: 0;
+		     width: 100%;
+		     height: 100%;
+		     background-color: rgba(0, 0, 0, 0.8);
+		     justify-content: center;
+		     align-items: center;
+		     z-index: 1000;
+		 }
+
+		 .modal img {
+		     max-width: 90%;
+		     max-height: 90%;
+		     border-radius: 10px;
+		     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+		 }
+
+		 .modal.active {
+		     display: flex;
+		 }
+
+      </style>
+	  <script>
+	      // مدة الجلسة (بالمللي ثانية) - هنا 30 دقيقة
+	      var sessionTimeout = 30 * 60 * 1000;
+	      var logoutTimer;
+
+	      function startLogoutTimer() {
+	          logoutTimer = setTimeout(function() {
+	              alert("Your session has expired. Please log in again.");
+	              window.location.href = "/patients/login"; // إعادة التوجيه لصفحة تسجيل الدخول
+	          }, sessionTimeout);
+	      }
+
+	      function resetLogoutTimer() {
+	          clearTimeout(logoutTimer); // إعادة ضبط المؤقت
+	          startLogoutTimer(); // إعادة بدء المؤقت
+	      }
+
+	      // بدء المؤقت عند تحميل الصفحة
+	      window.onload = function() {
+	          startLogoutTimer();
+	      };
+
+	      // إعادة ضبط المؤقت عند أي نشاط (نقر أو ضغط مفتاح)
+	      document.addEventListener("click", resetLogoutTimer);
+	      document.addEventListener("keypress", resetLogoutTimer);
+	  </script>
+
+	  <script>
+		function toggleNotificationForm() {
+		    var content = document.getElementById('content');
+		    var notificationForm = document.getElementById('notificationForm');
+		    var gigo = document.getElementById('gigo'); // الحصول على الـ div الذي يحمل id="gigo"
+		    
+		    // التحقق من حالة عرض الـ notificationForm
+		    if (notificationForm.style.display === 'none' || notificationForm.style.display === '') {
+		        // إظهار notificationForm وإخفاء العناصر الأخرى
+		        notificationForm.style.display = 'block';
+		        content.style.display = 'none';
+		        gigo.style.visibility = 'hidden'; // إخفاء gigo ولكن يبقى المساحة مشغولة
+		        gigo.style.position = 'absolute'; // إزالة المساحة التي يشغلها
+		    } else {
+		        // إخفاء notificationForm وإظهار العناصر الأخرى
+		        notificationForm.style.display = 'none';
+		        content.style.display = 'block';
+		        gigo.style.visibility = 'visible'; // إعادة إظهار gigo
+		        gigo.style.position = 'relative'; // استعادة مكانه الطبيعي
+		    }
+		}
+
+
+
+	            function updateDay() {
+	                var dateField = document.getElementById("date").value;
+	                var dayField = document.getElementById("day");
+
+	                if (dateField) {
+	                    var selectedDate = new Date(dateField);
+	                    var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	                    var dayOfWeek = daysOfWeek[selectedDate.getUTCDay()];
+	                    dayField.value = dayOfWeek;
+	                } else {
+	                    dayField.value = "";
+	                }
+	            }
+
+	            function setCurrentDate() {
+	                var today = new Date();
+	                var dateField = document.getElementById("date");
+	                var formattedDate = today.getFullYear() + "-" + ('0' + (today.getMonth() + 1)).slice(-2) + "-" + ('0' + today.getDate()).slice(-2);
+	                dateField.value = formattedDate;
+	                updateDay(); // Update day field based on the current date
+	            }
+
+	            function setCurrentTime() {
+	                var now = new Date();
+	                var hours = ('0' + now.getHours()).slice(-2);
+	                var minutes = ('0' + now.getMinutes()).slice(-2);
+	                var seconds = ('0' + now.getSeconds()).slice(-2);
+	                var currentTime = hours + ":" + minutes + ":" + seconds;
+	                document.getElementById("currentTime").value = currentTime;
+	            }
+
+	            window.onload = function() {
+	                setCurrentDate();
+	                setCurrentTime();
+	            };
+
+				function validateForm() {
+				    var checkbox = document.getElementById("dataUpdatedCheckbox");
+				    var isLoggedIn = document.getElementById("isLoggedIn").value;
+
+				    if (isLoggedIn === "false") {
+				        alert("Please log in first to send the notification.");
+				        window.location.href = "/patients/login"; // إعادة التوجيه إلى صفحة تسجيل الدخول
+				        return false; // يمنع إرسال النموذج
+				    }
+
+				    if (!checkbox.checked) {
+				        alert("Please confirm that all department data is updated to date.");
+				        return false;
+				    }
+
+				    alert("Form submitted successfully!");
+				    return true;
+				}
+				function checkMeals() {
+				    const breakfastCheckbox = document.getElementById('breakfast');
+				    const lunchCheckbox = document.getElementById('lunch');
+				    const iftarCheckbox = document.getElementById('iftar');
+				    const dinnerCheckbox = document.getElementById('dinner');
+
+				    // العلاقة بين breakfast و lunch
+				    if (breakfastCheckbox.checked) {
+				        lunchCheckbox.checked = true; // إذا تم اختيار breakfast، يتم اختيار lunch تلقائيًا
+				    } else {
+				        lunchCheckbox.checked = false; // إذا تم إلغاء breakfast، يتم إلغاء lunch تلقائيًا
+				    }
+
+				    if (lunchCheckbox.checked) {
+				        breakfastCheckbox.checked = true; // إذا تم اختيار lunch، يتم اختيار breakfast تلقائيًا
+				    } else {
+				        breakfastCheckbox.checked = false; // إذا تم إلغاء lunch، يتم إلغاء breakfast تلقائيًا
+				    }
+
+				    // العلاقة بين dinner و iftar
+				    if (dinnerCheckbox.checked) {
+				        iftarCheckbox.checked = false; // إذا تم اختيار dinner، يتم اختيار iftar تلقائيًا
+				    } else {
+				        iftarCheckbox.checked = false; // إذا تم إلغاء dinner، يتم إلغاء iftar تلقائيًا
+				    }
+				}
+
+	        </script>
+      <script>
+         function setDepartmentName() {
+         var today = new Date();
+             var dayField = document.getElementById("day");
+             var dateField = document.getElementById("date");
+         
+             // Set day of the week
+             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+             var dayOfWeek = daysOfWeek[today.getDay()];
+             dayField.value = dayOfWeek;
+         
+             // Set current date
+             var formattedDate = today.getFullYear() + "-" + ('0' + (today.getMonth() + 1)).slice(-2) + "-" + ('0' + today.getDate()).slice(-2);
+             dateField.value = formattedDate;
+             var path = window.location.pathname;
+             var departmentName = path.substring(path.lastIndexOf('/') + 1);
+             document.getElementById('departmentName').value = departmentName;
+             
+         }
+         window.onload = setDepartmentName;
+      </script>
+   </head>
+   <body>
+	
+
+      <!-- Profile Icon -->
+      <div class="profile-icon" onclick="toggleProfileDropdown()" id="action">
+         <img src="/ProfileIcon.jpg" alt="Profile Icon">
+      </div>
+      <!-- Profile Dropdown -->
+      <div class="profile-dropdown" id="profileDropdown">
+         <p><strong>Welcome:</strong> <span th:text="${username}"></span></p>
+         <form th:action="@{/patients/logout}" method="post">
+            <button type="submit" class="btn btn-danger">Logout</button>
+         </form>
+      </div>
+         <!-- Page header -->
+         <div class="page-header">
+            <div class="header-left">
+               <img src="/logo.png" alt="Logo" style="height: 120px;"> <!-- Adjust path and height as needed -->
+            </div>
+            <div class="header-center">
+               وزارة الصحة <br>
+               تجمع الرياض الصحي الثالث <br> 
+               مستشفــــى محافظة الدوادمــــــي العــــام<br>
+               وجبات المرضـــى والمرافقيــن من أقســــام التنويم	<br>				
+               النموذج رقم 5				
+            </div>
+            <div class="header-right">
+               <div>FM Department</div>
+               <div style="text-align:center;">
+                  <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
+               </div>
+            </div>
+         </div>
+         <!-- Add and print buttons -->
+         <div class="no-print">
+            <div class="search-container">
+               <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search the table...">
+            </div>
+            <a href="/patients/add" class="btn btn-primary mb-3"><i class="fas fa-user-plus"></i> Add Patient</a>
+            <!-- <button class="btn btn-info mb-3" onclick="window.print()"><i class="fas fa-print"></i> Print List</button> -->
+            <button class="btn btn-info mb-3" onclick="window.location.href='/patients/notifications/archive?department=FM'">Notification Archive</button>
+            <button class="btn btn-info mb-3" onclick="window.location.href='/patients/archive'">Patients Archive</button>
+            <button id="action" class="btn btn-info mb-3" onclick="window.print()">
+            <i class="fas fa-print"></i> Print
+            </button>   
+         </div>
+         <div class="notification-icon" onclick="toggleNotificationForm()" id="action">
+            <i class="fas fa-bell"></i> Send Notification<!-- FontAwesome Bell Icon -->
+         </div>
+		 <div>
+		     <p th:if="${errorMessage}" th:text="${errorMessage}" 
+		        style="color: red; text-align: center; font-size: 20px;" 
+		        id="errorMessage"></p>
+		        
+		     <p th:if="${successMessage}" th:text="${successMessage}" 
+		        style="color: green; text-align: center; font-size: 20px;" 
+		        id="successMessage"></p>
+		 </div>
+		 <div class="gallery" id="gigo">
+		         <img src="/57.png" alt="صورة 1" onclick="openModal(this)">
+		         <img src="/en-image.jpeg" alt="صورة 2" onclick="openModal(this)">
+		     </div>
+
+		     <!-- نافذة العرض -->
+		     <div id="modal" class="modal" onclick="closeModal()">
+		         <img id="modalImage" src="" alt="عرض الصورة">
+		     </div>
+         <!-- Display Pediatrics department patients list -->
+         <div class="patient-list" id="content">
+			
+            <h4>List of Patients Registered in the FM Department</h4>
+            <div class="table-responsive" >
+               <table class="table table-striped" id="patientsTable">
+                  <thead class="thead-dark">
+                     <tr>
+                        <th>#</th>
+                        <th>FNo</th>
+                        <th>Name of Patient</th>
+                        <th>Age</th>
+                        <th>Room</th>
+                        <th>Bed</th>
+                        <th>Pattern Feeds</th>
+                        <th>Diagnosis</th>
+                        <th id="diet-order-col">DietOrder</th>
+                        <th>Notes</th>
+                        <th>Ad. Date</th>
+                        <th>Co. Name</th>
+                        <th id="action" colspan="2">Action</th>
+                     </tr>
+                     <tr>
+                        <th colspan="6"></th>
+                        <th>
+                           <div class="pattern-feeds">
+                              <div>N</div>
+                              <div>C</div>
+                              <div>S</div>
+                           </div>
+                        </th>
+                        <th colspan="7"></th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr th:each="patient, iterStat : ${patients}" th:if="${patient.registeredByDepartment == 'FM' and !patient.archived}">
+                        <td></td>
+                        <td th:text="${patient.fileNo}"></td>
+                        <td th:text="${patient.nameOfPatient}"></td>
+                        <td th:text="${patient.age}"></td>
+                        <td th:text="${patient.room}"></td>
+                        <td th:text="${patient.bed}"></td>
+                        <td>
+                           <div class="pattern-feeds">
+                              <div th:text="${patient.patternFeeds == 'N' ? '✔' : ''}" class="check-mark"></div>
+                              <div th:text="${patient.patternFeeds == 'C' ? '✔' : ''}" class="check-mark"></div>
+                              <div th:text="${patient.patternFeeds == 'S' ? '✔' : ''}" class="check-mark"></div>
+                           </div>
+                        </td>
+                        <td th:text="${patient.diagnosis}"></td>
+                        <td th:text="${patient.dietOrder}"></td>
+                        <td th:text="${patient.notes}"></td>
+                        <td th:text="${patient.admissionDate}"></td>
+                        <td  th:text="${patient.companionName}"></td>
+                        <td id="action">
+                           <a th:href="@{'/patients/edit/' + ${patient.id}}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                        </td>
+                        <td class="actions-column no-print">
+                           <form th:action="@{'/patients/archive/' + ${patient.id}}" method="post" onsubmit="return confirm('Are you sure you want to archive this patient?');">
+                              <input type="hidden" name="_method" value="delete">
+                              <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                           </form>
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tfoot id="totalpattern">
+                     <tr>
+                        <td colspan="6" ><strong>Total</strong></td>
+                        <td>
+                           <div  class="pattern-feeds">
+                              <div  id="totalN">0</div>
+                              <div id="totalC">0</div>
+                              <div id="totalS">0</div>
+                        <td  colspan="4"></td> <!-- ترك خلايا فارغة للتقدم للعمود رقم 11 -->
+                        <td>
+                        <div  id="totalCompanion" >0</div> <!-- عرض العدد في العمود رقم 11 -->                 
+                        </td>
+                        </div>
+                        </td>
+                         <!-- <td colspan="5"></td> -->
+                     </tr>
+                     <tr>
+                        <td class="mosad" colspan="6" id="total1" ><strong>Total number of companions and patients</strong></td>
+                        <td class="mosad" colspan="8" id="total">0</td>
+                     </tr>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      </div>
+	  <!-- Notification Section -->
+	  <div class="notification-form" id="notificationForm">
+	     <h1>Send Notification</h1>
+	     <form action="#" th:action="@{/patients/send-notification}" th:object="${notification}" method="post" onsubmit="return validateForm()">
+	        <input type="hidden" id="isLoggedIn" th:value="${session.username != null}" />
+	        <div class="form-group">
+	           <label>Meal Types:</label>
+	           <div class="meal-options">
+	              <label><input type="checkbox" name="mealTypes" value="Breakfast" id="breakfast" onchange="checkMeals()"> Breakfast</label>
+	              <label><input type="checkbox" name="mealTypes" value="Lunch" id="lunch" onchange="checkMeals()"> Lunch</label>
+	              <label><input type="checkbox" name="mealTypes" value="Dinner" id="dinner" onchange="checkMeals()"> Dinner</label>
+	              <!--<label><input type="checkbox" name="mealTypes" value="Iftar" id="iftar" onchange="checkMeals()"> Iftar</label>
+	              <label><input type="checkbox" name="mealTypes" value="Sohour" id="sohour" onchange="checkMeals()"> Sohour</label>
+	           -->
+			  </div>
+	        </div>
+	        <div class="form-group">
+	           <label for="date">Date:</label>
+	           <input type="date" id="date" name="date" onchange="updateDay()" required/>
+	        </div>
+	        <div class="form-group">
+	           <label for="day">Day:</label>
+	           <input type="text" id="day" name="day" readonly required/>
+	        </div>
+	        <div class="form-group">
+	           <input type="hidden" id="currentTime" name="currentTime" />
+	        </div>
+	        <div class="form-group">
+	           <label for="nurseName">Nurse Name:</label>
+	           <input type="text" id="nurseName" name="nurseName" required/>
+	        </div>
+	        <div class="form-group">
+	           <label for="nurseFileNumber">Nurse File Number:</label>
+	           <input type="text" id="nurseFileNumber" name="nurseFileNumber" required/>
+	        </div>
+	        <div class="form-group">
+	           <input type="hidden" id="departmentName" name="departmentName"/>
+	        </div>
+	        <div class="form-group">
+	           <label>
+	           <input type="checkbox" id="dataUpdatedCheckbox" name="dataUpdated" required /> All data on the main screen of the section is up to date
+	           </label>
+	        </div>
+	        <div class="form-group">
+	           <input type="submit" value="Send" class="btn-submit"/>
+	           <input type="button" value="Back" class="btn-submit" onclick="toggleNotificationForm()"/>
+	        </div>
+	     </form>
+	  </div>
+
+
+	  <div>
+		
+	  </div>
+      <!-- معلومات التوقيع بجانب بعضها -->
+      <div class="signature-section">
+         <div class="signature-container">
+            <div class="signature-column">
+               <div class="signature-title">NURSE OF WARD</div>
+               <div class="signature-row">
+                  <span class="signature-label">Sign:</span>
+                  <span class="signature-field">.............................................</span>
+               </div>
+            </div>
+            <div class="signature-column">
+               <div class="signature-title">HEAD NURSE OF WARD</div>
+               <div class="signature-row">
+                  <span class="signature-label">Sign:</span>
+                  <span class="signature-field">.............................................</span>
+               </div>
+            </div>
+            <div class="signature-column">
+               <div class="signature-title">DIETITIAN</div>
+               <div class="signature-row">
+                  <span class="signature-label">Sign:</span>
+                  <span class="signature-field">.............................................</span>
+               </div>
+            </div>
+            <div class="signature-column">
+               <div class="signature-title">DIRECTOR</div>
+               <div class="signature-row">
+                  <span class="signature-label">Sign:</span>
+                  <span class="signature-field">.............................................</span>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- JavaScript section -->
+      <script src="/assets/js/jquery-3.5.1.slim.min.js"></script>
+      <script src="/assets/js/popper.min.js"></script>
+      <script src="/assets/js/bootstrap.min.js"></script>
+      <script>
+         document.addEventListener("DOMContentLoaded", function() {
+             var totalN = 0;
+             var totalC = 0;
+             var totalS = 0;
+             var totalCompanion = 0;
+             var totalNumber = 0;
+         
+             function updateTotals() {
+                 totalN = 0;
+                 totalC = 0;
+                 totalS = 0;
+                 totalCompanion = 0;
+         
+                 var rows = document.querySelectorAll("tbody tr");
+         
+                 rows.forEach(function(row) {
+                     if (row.style.display !== 'none') {
+                         var cells = row.querySelectorAll(".pattern-feeds div");
+                         var companionNameCell = row.querySelectorAll("td")[11];
+                         
+                         if (cells[0].innerText.trim() === '✔') {
+                             totalN++;
+                         }
+                         if (cells[1].innerText.trim() === '✔') {
+                             totalC++;
+                         }
+                         if (cells[2].innerText.trim() === '✔') {
+                             totalS++;
+                         }
+                         
+                         if (companionNameCell && companionNameCell.innerText.trim() !== "") {
+                             totalCompanion++;
+                         }
+                     }
+                 });
+         
+                 totalNumber = totalCompanion + totalN + totalC + totalS;
+         
+                 document.getElementById("totalN").innerText = totalN;
+                 document.getElementById("totalC").innerText = totalC;
+                 document.getElementById("totalS").innerText = totalS;
+                 document.getElementById("totalCompanion").innerText = totalCompanion;
+                 document.getElementById("total").innerText = totalNumber;
+             }
+         
+             // Call updateTotals on initial load
+             updateTotals();
+         
+             // Update totals whenever the search function is called
+             document.getElementById('searchInput').addEventListener('input', function() {
+                 searchTable();
+                 updateTotals();
+             });
+         
+             function searchTable() {
+                 // الحصول على قيمة مربع البحث
+                 let input = document.getElementById('searchInput').value.toLowerCase();
+                 
+                 // الحصول على الجدول
+                 let table = document.getElementById('patientsTable');
+                 
+                 let tr = table.getElementsByTagName('tr');
+                 
+                 // تكرار عبر الصفوف في الجدول
+                 for (let i = 1; i < tr.length; i++) {
+                     // التحقق من أن الصف ليس ضمن tfoot
+                     if (tr[i].parentNode.tagName.toLowerCase() === 'tfoot') {
+                         continue; // الانتقال إلى الصف التالي
+                     }
+         
+                     let td = tr[i].getElementsByTagName('td');
+                     let found = false;
+                     
+                     // تكرار عبر خلايا الصف
+                     for (let j = 0; j < td.length; j++) {
+                         if (td[j].textContent.toLowerCase().indexOf(input) > -1) {
+                             found = true;
+                             break;
+                         }
+                     }
+                     
+                     // عرض أو إخفاء الصف بناءً على ما إذا كان مطابقًا للبحث
+                     tr[i].style.display = found ? '' : 'none';
+                 }
+             }
+         });
+      </script>
+      <script>
+         document.addEventListener("DOMContentLoaded", function() {
+             var table = document.getElementById("patientsTable");
+             var rows = table.querySelectorAll("tbody tr");
+             rows.forEach(function(row, index) {
+                 var serialNoCell = row.querySelector("td:first-child");
+                 serialNoCell.textContent = index + 1;
+             });
+         });
+      </script>
+      <script>
+         function toggleProfileDropdown() {
+             const dropdown = document.getElementById('profileDropdown');
+             dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+         }
+         // Close the dropdown if the user clicks outside of it
+         window.onclick = function(event) {
+             if (!event.target.matches('.profile-icon') && !event.target.matches('.profile-icon *')) {
+                 const dropdown = document.getElementById('profileDropdown');
+                 if (dropdown.style.display === 'block') {
+                     dropdown.style.display = 'none';
+                 }
+             }
+         }
+      </script>
+	  <script>
+	      // تنفيذ عند تحميل الصفحة
+	      window.onload = function() {
+	          // الحصول على العناصر
+	          const errorElement = document.getElementById("errorMessage");
+	          const successElement = document.getElementById("successMessage");
+
+	          // إخفاء رسالة الخطأ بعد 5 ثوانٍ
+	          if (errorElement) {
+	              setTimeout(() => {
+	                  errorElement.style.display = "none";
+	              }, 5000);
+	          }
+
+	          // إخفاء رسالة النجاح بعد 5 ثوانٍ
+	          if (successElement) {
+	              setTimeout(() => {
+	                  successElement.style.display = "none";
+	              }, 5000);
+	          }
+	      };
+	  </script>
+	  <script>
+	          // فتح الصورة في نافذة العرض
+	          function openModal(image) {
+	              const modal = document.getElementById('modal');
+	              const modalImage = document.getElementById('modalImage');
+	              modalImage.src = image.src; // نسخ مسار الصورة
+	              modal.classList.add('active'); // إظهار النافذة
+	          }
+
+	          // إغلاق نافذة العرض
+	          function closeModal() {
+	              const modal = document.getElementById('modal');
+	              modal.classList.remove('active'); // إخفاء النافذة
+	          }
+	      </script>
+		  
+   </body>
+</html>

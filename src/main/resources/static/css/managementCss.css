@@ -1,0 +1,537 @@
+ 
+ 
+ .form-popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .form-popup input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .form-popup button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-popup button[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .close-btn {
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .close-btn:hover {
+            background-color: darkred;
+            transform: scale(1.05);
+        }
+         .btn-custom {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+       .profile-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: 2px solid #007bff;
+            border-radius: 50px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s;
+        }
+        .profile-icon:hover {
+            background-color: #e2e6ea;
+        }
+         th {
+            background-color: #4caf50;
+            color: white;
+            text-align: center;
+        }
+        .thead-dark th {
+            background-color: #4caf50 !important;
+            border-bottom: 2px solid #3e8e41;
+        }
+        .profile-icon img {
+    width: 40px; /* تحديد العرض الجديد */
+    height: 40px; /* تحديد الارتفاع الجديد */
+    border-radius: 50%;
+}
+        .profile-dropdown {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 1000;
+        }
+        .profile-dropdown p {
+            margin: 0 0 10px 0;
+        }
+        .profile-dropdown form {
+            margin: 0;
+        }
+         body {
+font-family: Arial, sans-serif; /* تعيين الخط */
+    font-weight: bold; /* تعيين الخط عريض */         }
+         .container {
+         margin-top: 15px;
+         
+         }
+         .btn-add {
+         margin-bottom: 10px;
+         }
+         .table {
+         margin-top: 20حء;
+         border-collapse: collapse; /* Collapse table borders */
+         width: 100%;
+         overflow-x: auto; /* Enable horizontal scrolling for the table */
+             transform: translateX(-35px); /* Move the table 10px to the left */
+         
+
+         }
+         .table th,
+         .table td {
+         border: 1px solid #dddddd; /* Add borders */
+         padding: 8px; /* Add padding */
+         text-align: center; /* Center align text */
+         
+         }
+       .table th {
+       
+         background-color: #343a40; /* Header background color */
+         color: white; /* Header text color */
+         white-space: nowrap;
+         
+         }
+          #serial-no-col,#note-order-col,#no-col,#file-no-col,#name-col,#age-col,#room-col,#bed-col,#diagnosis-col,#diet-order-col,#admission-date-col,#companion-name-col,#department-col,#ac-col {
+        text-align: center; /* محاذاة أفقية */
+        vertical-align: middle; /* محاذاة عمودية */
+    }
+    
+    #patientsTable td{
+    text-align: center; /* محاذاة أفقية */
+        vertical-align: middle; /* محاذاة عمودية */
+    }
+   
+         .pattern-feeds {
+            display: flex;
+            justify-content: space-around;
+        }
+        .pattern-feeds div {
+            width: 30px;
+            text-align: center;
+        }
+        /* إضافة خط الفاصل */
+.pattern-feeds div:not(:last-child) {
+  position: relative; /* إضافة position: relative للعنصر الأساسي */
+}
+
+.pattern-feeds div:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0; /* بدء الخط من الأعلى */
+  right: 0; /* تحديد موقع الخط على اليمين */
+  height: 100%; /* ارتفاع الخط على طول العنصر */
+  border-right: 1px solid #1a1110; /* خصائص الخط */
+}
+         .check-mark {
+         color: black;
+         
+         }
+         .actions-column {
+         white-space: nowrap;
+         }
+         .actions-column a {
+         margin-right: 5px; /* Add space between buttons */
+         }
+         .mosad {
+         background-color: yellow ;
+         color: black ; /* لضمان وضوح النص */
+         }
+     
+         @media print {
+      
+        table th, table td {
+            /* لضمان أن الجدول لا يتقلص */
+                
+            
+        }
+       
+       
+        .depart-col {
+            display: none;
+         }
+         .print-checkbox{
+         display: none
+         }
+
+         td.depart-col {
+            display: none;
+         }
+         body {
+        transform: rotate(0deg); /* تأكد من عدم التدوير */
+        transform-origin: top left; /* تأكد من أن التدوير من الزاوية الصحيحة */
+        
+    }
+    .no-print-depart {
+        display: none;
+    }
+    #print-section, #print-section * {
+        visibility: visible; /* عرض فقط القسم المخصص للطباعة */
+    }
+       #print-section {
+        position: absolute;
+        top: -15px; /* قلل المسافة لرفع العنصر نحو الأعلى */
+        left: 0;
+        width: 100%; /* عرض كامل للصفحة */
+        font-size: 14px; /* تكبير حجم الخط قليلاً */
+        line-height: 1.5; /* ارتفاع السطر */
+    }
+
+    .print-info {
+ font-size: 14px; /* تكبير حجم الخط */
+        margin: 10px; /* إضافة مساحة حول النص */
+        border: 1px solid #000; /* إضافة حد باللون الأسود */
+        padding: 10px; /* إضافة مسافة داخلية */    }
+    .print-info div {
+        margin-bottom: 10px; /* إضافة مساحة بين الأسطر */
+    }
+    .print-info strong {
+        display: inline; /* عرض العناوين بجانب القيم */
+    }
+    .print-info span {
+        display: inline; /* عرض القيم بجانب العناوين */
+    }
+    /* إخفاء الكارد عند الطباعة */
+    
+    /* لضمان أن meal و day يظهران في أسطر منفصلة */
+    .print-info .meal,
+    .print-info .day {
+        display: block;
+    }
+    
+    #mm{
+             display: none;
+    
+    }
+    .profile-icon{
+                 display: none;
+    
+    }
+     
+    
+       #patientsTable thead th {
+                background-color: #fafafa !important; /* استخدام !important لتجاوز أي قواعد أخرى */
+                color: #000000 !important; /* اللون الأسود للنصوص */
+            } 
+            #total1 , #total{
+                            background-color: #eeeeee !important; /* استخدام !important لتجاوز أي قواعد أخرى */
+            
+            }     
+          @page {
+                margin: 0mm; /* تحديد الهوامش، يمكنك ضبطها حسب الحاجة */
+            }       
+         .table th {
+        background-color: #343a40; /* لون الخلفية */
+        color: white; /* لون النص */
+        
+    }
+    
+         .notification-info span {
+         font-size: 0.9em; /* حجم الخط للطباعة */
+         }
+         .signature-section {
+                display: block !important;
+                margin-top: 30px;
+                width: 100%;
+                
+            }
+           .mosad {
+                background-color: #eeeeee ;
+                
+            }
+         .notification-info span {
+         white-space: nowrap; /* لمنع النص من التمرير إلى الأسطر التالية */
+         }
+         .no-print {
+         display: none;
+         }
+         .actions-column {
+         display: none;
+         }
+         .table th,
+         .table td {
+         font-size: 10pt;
+         }
+         .notification-icon {
+         visibility:hidden;
+         }
+         .notification-count{
+         display: none;
+         }.read-btn{
+         visibility:hidden;
+         }.new{
+         visibility:hidden;
+         }
+         }
+         .page-header {
+    display: flex;
+    flex-direction: row-reverse; /* عكس ترتيب العناصر بحيث يظهر اليسار على اليمين والعكس */
+    justify-content: space-between; /* توزيع العناصر مع مسافات متساوية */
+    align-items: center; /* محاذاة العناصر عموديًا في الوسط */
+    padding: 0 20px; /* مساحة حول الحاوية (اختياري) */
+         }
+      .header-container {
+    display: flex;
+    flex-direction: row-reverse; /* عكس ترتيب العناصر بحيث يظهر اليسار على اليمين والعكس */
+    justify-content: space-between; /* توزيع العناصر مع مسافات متساوية */
+    align-items: center; /* محاذاة العناصر عموديًا في الوسط */
+    padding: 0 20px; /* مساحة حول الحاوية (اختياري) */
+}
+
+/* التنسيق للعناصر داخل الحاوية */
+.header-left, .header-center, .header-right {
+    /* التنسيق الأساسي للعناصر */
+}
+
+.header-left {
+    text-align: right; /* محاذاة النص لليمين */
+}
+
+.header-center {
+    text-align: center;
+    font-size: 20px;
+    margin-left: 65px; /* حدد القيمة المناسبة لتحريك العنصر ناحية اليمين */
+    margin-top: 25px; /* حدد القيمة المناسبة لتحريك العنصر ناحية اليمين */
+}
+
+.header-right {
+    text-align: left; /* محاذاة النص لليسار */
+}
+         .notification-icon {
+         position: relative;
+         cursor: pointer;
+         font-size: 24px;
+         color: blue;
+         display: inline-block;
+         }
+         .notification-count {
+         position: absolute;
+         top: -10px;
+         right: -10px;
+         background-color: red;
+         color: white;
+         border-radius: 50%;
+         padding: 5px 8px;
+         font-size: 12px;
+         font-weight: bold;
+         z-index: 1;
+         }
+  .notification-card {
+    position: absolute;
+    top: 20px; /* المسافة من الأعلى */
+    left: 47px; /* المسافة من اليسار */
+    z-index: 1000; /* تأكد من ظهورها فوق العناصر الأخرى */
+    display: none; /* تأكد من ظهور البطاقة بدلاً من إخفائها */
+    width: 300px; /* عرض البطاقة */
+    padding: 15px; /* مسافة داخلية */
+    background-color: #fff; /* لون الخلفية */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل البطاقة */
+    
+}
+         .notification-card h2 {
+         font-size: 18px;
+         color: #333;
+         margin-bottom: 10px;
+         
+         }
+         .notification-list {
+         list-style-type: none;
+         padding: 0;
+         margin: 0;
+         }
+         .notification-list li {
+         margin-bottom: 10px;
+         padding: 10px;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         }
+         .notification-list li .notification-info {
+         flex: 1;
+         }
+         .notification-list li .notification-actions {
+         flex-shrink: 0;
+         }
+         .notification-list li .notification-actions form {
+         display: inline;
+         }
+         .notification-list li .notification-actions button {
+         padding: 5px 10px;
+         background-color: blue;
+         color: white;
+         border: none;
+         border-radius: 3px;
+         cursor: pointer;
+         }
+         .notification-list li .notification-actions button:hover {
+         background-color: darkblue;
+         }
+         .read-btn {
+         background-color: #4CAF50; /* لون زر تم القراءة */
+         }
+         .read-btn:hover {
+         background-color: #45a049; /* تغيير لون الخلفية عندما يكون المؤشر فوقه */
+         }
+         
+         
+        /* تحسين تنسيق معلومات التوقيع */
+        .signature-section {
+            margin-top: 10px;
+            width: 100%;
+             display: none;
+             
+            
+        }
+
+        .signature-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap; /* يسمح بالتفاف العناصر عند الحاجة */
+            
+        }
+
+        .signature-column {
+            width: 23%; /* عرض كل عمود أقل من 25% لتجنب التصاق العناصر */
+            margin-bottom: 20px;
+        }
+
+        .signature-row {
+            margin-bottom: 15px;
+        }
+
+        .signature-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .signature-field {
+            display: block;
+            width: calc(100% - 10px);
+            padding-left: 5px;
+        }
+
+        .signature-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color:red;
+        }
+     
+/* Container for the select element */
+.filter-container {
+    display: flex;
+    justify-content: center; /* Center the select element horizontally */
+    margin-bottom: 20px; /* Space below the select element */
+}
+
+/* Styling for the select element */
+.filter-select {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    border: 2px solid #007bff; /* Blue border */
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#printTypeSelect {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    border: 2px solid #007bff; /* Blue border */
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Styling for the select element on hover */
+.filter-select:hover {
+    border-color: #0056b3; /* Darker blue border on hover */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+}
+
+/* Styling for the select element when focused */
+.filter-select:focus {
+    border-color: #0056b3; /* Darker blue border on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Shadow effect on focus */
+}
+#mm{
+        margin-left: -40px; /* Adjust this value to move the button to the left */
+  margin-top: 5px;
+}
+
+#hi{
+    max-width: 150px; /* تعيين عرض أقصى للخلية للتحكم في حجمها */
+    word-wrap: break-word; /* السماح بتفاف النص داخل الخلية */
+    overflow-wrap: break-word; /* التفاف الكلمات الطويلة إلى السطر التالي */
+    white-space: normal; /* السماح للنص بالتفاف */
+    text-align: center; /* محاذاة النص أفقيًا في المركز */
+    vertical-align: middle; /* محاذاة النص عموديًا في الوسط */
+    padding: 8px; /* إضافة حشو حول النص */
+    border: 1px solid #dddddd; /* إضافة حدود للخلية */
+}
+}
+}

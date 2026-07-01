@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	           <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .btn-add {
+            margin-bottom: 10px;
+        }
+        .table {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .pattern-feeds {
+            display: flex;
+            justify-content: space-around;
+        }
+        .pattern-feeds div {
+            width: 30px;
+            text-align: center;
+        }
+        .check-mark {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Patients Management System</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <form th:action="@{/patients/search}" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="name" placeholder="Search by name">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 text-right">
+                <form th:action="@{/patients/sort}" method="get">
+                    <button type="submit" class="btn btn-secondary">Sort by Age</button>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <a th:href="@{/patients/add}" class="btn btn-success btn-add">Add Patient</a>
+        <button class="btn btn-primary btn-add" onclick="generatePDF()">Download PDF Report</button>
+        
+        <table class="table table-striped mt-3" id="patientsTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>File No</th>
+                    <th>Name of Patient</th>
+                    <th>Age</th>
+                    <th>Room</th>
+                    <th>Bed</th>
+                    <th>Pattern Feeds</th>
+                    <th>Diagnosis</th>
+                    <th>Diet Order</th>
+                    <th>Admission Date</th>
+                    <th>Companion Name</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <div class="pattern-feeds">
+                            <div>N</div>
+                            <div>C</div>
+                            <div>S</div>
+                        </div>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.fileNo}"></td>
+                    <td th:text="${patient.nameOfPatient}"></td>
+                    <td th:text="${patient.age}"></td>
+                    <td th:text="${patient.room}"></td>
+                    <td th:text="${patient.bed}"></td>
+                    <td>
+                        <div class="pattern-feeds">
+                            <div th:text="${patient.patternFeeds == 'N' ? '✔' : ''}" class="check-mark"></div>
+                            <div th:text="${patient.patternFeeds == 'C' ? '✔' : ''}" class="check-mark"></div>
+                            <div th:text="${patient.patternFeeds == 'S' ? '✔' : ''}" class="check-mark"></div>
+                        </div>
+                    </td>
+                    <td th:text="${patient.diagnosis}"></td>
+                    <td th:text="${patient.dietOrder}"></td>
+                    <td th:text="${patient.admissionDate}"></td>
+                    <td th:text="${patient.companionName}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            html2canvas(document.querySelector("#patientsTable")).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'PNG', 0, 0);
+                pdf.save("patients_table.pdf");
+            });
+        }
+    </script>
+</body>
+</html>

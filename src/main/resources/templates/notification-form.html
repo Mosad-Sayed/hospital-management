@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Notification</title>
+    <!-- Include FontAwesome -->
+	     <link rel="stylesheet" href="/assets/css/all.min.css">
+	    
+    <style>
+        .notification-icon {
+            cursor: pointer;
+            font-size: 24px; /* Increase icon size */
+            color: blue; /* Set icon color */
+        }
+        .notification-form {
+            display: none;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"], 
+        .form-group input[type="date"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .form-group select {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .form-group .btn-submit {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .notification-list {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .notification-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .notification-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        function toggleNotificationForm() {
+            var notificationForm = document.getElementById("notificationForm");
+            var notificationList = document.getElementById("notificationList");
+            if (notificationForm.style.display === "block") {
+                notificationForm.style.display = "none";
+            } else {
+                notificationForm.style.display = "block";
+                notificationList.style.display = "none"; // Ensure notification list is hidden
+            }
+        }
+
+        function setCurrentDate() {
+            var today = new Date();
+            var dayField = document.getElementById("day");
+            var dateField = document.getElementById("date");
+
+            // Set day of the week
+            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var dayOfWeek = daysOfWeek[today.getDay()];
+            dayField.value = dayOfWeek;
+
+            // Set current date
+            var formattedDate = today.getFullYear() + "-" + ('0' + (today.getMonth() + 1)).slice(-2) + "-" + ('0' + today.getDate()).slice(-2);
+            dateField.value = formattedDate;
+        }
+
+        window.onload = function() {
+            setCurrentDate();
+        };
+
+        function validateForm() {
+            var checkbox = document.getElementById("dataUpdatedCheckbox");
+            if (!checkbox.checked) {
+                alert("Please confirm that all department data is updated to date.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="notification-icon" onclick="toggleNotificationForm()">
+        <i class="fas fa-bell"></i> <!-- FontAwesome Bell Icon -->
+    </div>
+
+    <div class="notification-form" id="notificationForm">
+        <h1>Send Notification</h1>
+        <form action="#" th:action="@{/send-notification}" th:object="${notification}" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="mealType">Meal Type:</label>
+                <select id="mealType" name="mealType" th:field="*{mealType}">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" th:field="*{date}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" id="day" name="day" readonly/>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="dataUpdatedCheckbox" name="dataUpdated" />
+                    All department data updated to date
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Send" class="btn-submit"/>
+                
+            </div>
+        </form>
+    </div>
+
+    <div class="notification-list" id="notificationList">
+        <h2>Notification List</h2>
+        <ul>
+            <li th:each="notification : ${notifications}">
+                <span th:text="${notification.mealType}"></span> -
+                <span th:text="${notification.date}"></span> -
+                <span th:text="${notification.day}"></span>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

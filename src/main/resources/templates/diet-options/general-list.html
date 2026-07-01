@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>General Diet Options</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>General Diet Options</h1>
+        <a th:href="@{/diet-options/general/add}" class="btn btn-primary">Add New General Option</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">OTHER_GENERAL Options</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Label</th>
+                        <th>Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="option : ${generalOptions}">
+                        <td th:text="${option.id}"></td>
+                        <td th:text="${option.label}"></td>
+                        <td th:text="${option.value}"></td>
+                        <td>
+							<a th:href="@{/diet-options/general/edit/{id}(id=${option.id})}" 
+							   class="btn btn-sm btn-warning me-2">Edit</a>
+                            <a th:href="@{/diet-options/delete/{id}(id=${option.id})}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Delete this General option?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a th:href="@{/diet-options}" class="btn btn-secondary mt-3">Back to Main Menu</a>
+</div>
+</body>
+</html>

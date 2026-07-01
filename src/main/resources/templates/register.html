@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Account</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	       <link rel="stylesheet" href="/assets/css/all.min.css">
+    <style>
+        body {
+        background: url('') no-repeat center center fixed, linear-gradient(to right, #00C851, #7ccaa3); /* دمج الصورة مع اللون */
+                       background-size: 5px; /* تجعل الصورة تغطي الصفحة بالكامل */ background-blend-mode: overlay; /* دمج الصورة واللون */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        @keyframes backgroundAnimate {
+            0%, 100% {
+                background: linear-gradient(120deg, #3498db, #2ecc71);
+            }
+            50% {
+                background: linear-gradient(120deg, #2ecc71, #3498db);
+            }
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+            animation: slideIn 1s ease-out;
+        }
+        .container h2 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1.1em;
+            transition: box-shadow 0.3s;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 10px rgba(50, 152, 219, 0.5);
+        }
+        .btn-primary {
+            background-color: #007E33;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            
+        }
+
+        .btn-primary:hover {
+            background-color: #005E25;
+            transform: translateY(-3px);
+        }
+        p {
+            margin-top: 20px;
+            text-align: center;
+        }
+        a {
+            color: #3498db;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #2ecc71;
+            text-decoration: none;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Register New Account</h2>
+        <form th:action="@{/patients/register}" method="post">
+            <div th:if="${message}" class="alert alert-danger mt-3" role="alert">
+                <p th:text="${message}"></p>
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select class="form-control" id="department" name="department" required>
+                    <option value="management" th:selected="${department == 'management'}">Management</option>
+                
+                    <option value="dietary" th:selected="${department == 'dietary'}">DIETARY</option>
+                    <option value="nursery" th:selected="${department == 'nursery'}">NURSERY</option>
+                    <option value="pediatrics" th:selected="${department == 'pediatrics'}">PEDIA</option>
+                                        <option value="MS" th:selected="${department == 'MS'}">MS</option>
+                                        <option value="MM" th:selected="${department == 'MM'}">MM</option>
+                                        <option value="ICU" th:selected="${department == 'ICU'}">ICU</option>
+                                        <option value="CCU" th:selected="${department == 'CCU'}">CCU</option>
+                                        <option value="OB" th:selected="${department == 'OB'}">OB</option>
+                                        <option value="AKU1" th:selected="${department == 'AKU1'}">AKU1</option>
+										<option value="AKU2" th:selected="${department == 'AKU2'}">AKU2</option>
+                                        <option value="FS" th:selected="${department == 'FS'}">FS</option>
+                                        <option value="FM" th:selected="${department == 'FM'}">FM</option>
+                    
+                </select>
+            </div>
+               <button type="button" class="btn btn-primary" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i> 
+    </button>
+            <button type="submit" class="btn btn-primary">Register</button>
+         
+        </form>
+    </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const button = event.target.querySelector('button[type="submit"]');
+            button.innerHTML = 'Registering...';
+            button.disabled = true;
+            setTimeout(() => {
+                event.target.submit();
+            }, 2000); // Simulate a delay for demo purposes
+        });
+    </script>
+</body>
+</html>

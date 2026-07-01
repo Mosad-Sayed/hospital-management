@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8">
+      <title>Management Department - Patient Management System</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	        <link rel="stylesheet" href="/assets/css/all.min.css">
+			<link rel="stylesheet" href="/css/managementCss.css"> <!-- رابط إلى ملف CSS -->
+          <script src="/js/dietaryJs.js"></script>
+      <style>
+        @media print {
+            .header-right {
+                      visibility: hidden; /* سيخفي العنصر ولكن سيترك المساحة المخصصة له */
+            }
+           
+    
+        }
+               
+      #diet-order-col {
+    min-width: 200px !important;
+}
+#admission-date-col{
+    min-width: 100px !important;
+
+}
+#note-order-col{
+    min-width: 100px !important;
+
+}
+    </style>
+ 
+   </head>
+   <body>
+    <!-- Profile Icon -->
+    <div class="profile-icon" onclick="toggleProfileDropdown()">
+        <img src="/ProfileIcon.jpg" alt="Profile Icon">
+    </div>
+
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profileDropdown">
+        <p><strong>Welcome:</strong> <span th:text="${username}"></span></p>
+        <form th:action="@{/patients/logout}" method="post">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+      <div class="container">
+      <div class="page-header">
+         <div class="header-left">
+            <img src="/logo.png" alt="Logo" style="height: 190px;">
+         </div>
+         <div class="header-center">
+            وزارة الصحة <br>
+            تجمع الرياض الصحي الثالث <br> 
+            مستشفــــى محافظة الدوادمــــــي العــــام<br>
+            وجبات المرضـــى والمرافقيــن من أقســــام التنويم	<br>				
+            النموذج رقم 5				
+         </div>
+         <div class="header-right">
+            <div>Management Department</div>
+<div style="text-align:center;">
+        <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
+       </div>            <div style="text-align:center;" id="dayName"></div>
+         </div>
+      </div>
+      <div class="container">
+         <h2 class="text-center mb-4 no-print">Management Department - Patient Management System</h2>
+         <div class="row no-print">
+            <div class="col-md-6">
+               <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+            </div>
+ <div class="filter-container">
+    <select class="filter-select" id="departmentFilter" onchange="filterByDepartment()">
+        <option value="ALL">All Departments</option>
+        <option value="PEDIATRICS">Pedia</option>
+        <option value="NURSERY">NURSERY</option>
+        <option value="DIETARY">DIETARY</option>
+        <option value="MS">MS</option>
+        <option value="MM">MM</option>
+        <option value="ICU">ICU</option>
+        <option value="CCU">CCU</option>
+        <option value="OB">OB</option>
+        <option value="AKU">AKU</option>
+        <option value="FS">FS</option>
+        <option value="FM">FM</option>
+    </select>
+</div>
+
+         </div>
+        <div id="printModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background: white; border: 1px solid black; z-index: 1000;">
+    <h2>Select Print Type</h2>
+    <select id="printTypeSelect">
+    <option value="">Select print type</option>
+    <option value="patient">Patient</option>
+    <option value="companion">Companion</option>
+    <option value="specific">Specific Patient (Enter fileNo below)</option>
+  <!--  <option value="one">Print One Patient</option> -->
+</select>
+    <div id="specificPatientContainer" style="display: none; margin-top: 10px;">
+        <label for="specificPatientFileNo">Enter fileNo of specific patient:</label>
+        <input type="text" id="specificPatientFileNo">
+    </div>
+    <button onclick="processPrint()"  class="btn btn-danger">Print</button>
+    <button onclick="closePrintModal()" class="btn btn-danger">Cancel</button>
+</div>
+         <hr class="no-print">
+         <button class="btn btn-primary btn-add no-print" onclick="window.print()">Download PDF Report</button>
+       <!-- <button class="btn btn-primary btn-add no-print" onclick="showRetrieveForm(this)">Retrieve notifications</button> -->
+        <button class="btn btn-primary btn-add no-print" onclick="window.location.href='/patients/archived'">Patients Archive</button>
+
+      
+        
+        
+         <table class="table table-striped mt-3" id="patientsTable">
+            <thead class="thead-dark">
+                          <tr>
+               
+    <th id="serial-no-col" rowspan="2">SNo</th>
+    <th id="file-no-col" rowspan="2">File No</th>  
+    <th id="name-col" rowspan="2">Name Of Patient</th>
+    <th id="age-col" rowspan="2">Age</th>
+    <th id="room-col" rowspan="2">Room</th>
+    <th id="bed-col" rowspan="2">Bed</th>
+    <th id="pattern-feeds-col">Pattern Feeds</th>
+    <th id="diagnosis-col" rowspan="2">Diagnosis</th>
+    <th id="diet-order-col" rowspan="2">Diet Order</th>
+        <th id="note-order-col" rowspan="2">Notes</th>
+    
+    <th id="admission-date-col" rowspan="2">Ad. Date</th>
+    <th id="companion-name-col" rowspan="2">Co. Name</th>
+            <th id="department-col" class="depart-col" rowspan="2">Department</th>
+    <th class="actions-column no-print" rowspan="2" id="ac-col" colspan="2" >Actions</th>
+</tr>
+<tr>
+    <th rowspan="2">
+        <div class="pattern-feeds">
+            <div>N</div>
+            <div>C</div>
+            <div>S</div>
+        </div>
+    </th>
+</tr>
+            </thead>
+             <tbody>
+        <tr th:each="patient, iterStat : ${patients}" th:if="${!patient.archived}">
+                  <td></td>
+                  <!-- توليد الرقم التسلسلي -->
+                  <td th:text="${patient.fileNo}"></td>
+                  <td th:text="${patient.nameOfPatient}"></td>
+                  <td th:text="${patient.age}"></td>
+                  <td th:text="${patient.room}"></td>
+                  <td  th:text="${patient.bed}"></td>
+                  <td>
+                     <div class="pattern-feeds">
+                        <div th:text="${patient.patternFeeds == 'N' ? '✔' : ''}" class="check-mark"></div>
+                        <div th:text="${patient.patternFeeds == 'C' ? '✔' : ''}" class="check-mark"></div>
+                        <div th:text="${patient.patternFeeds == 'S' ? '✔' : ''}" class="check-mark"></div>
+                     </div>
+                  </td>
+                  <td id="hi" th:text="${patient.diagnosis}"></td>
+                  <td id="hi" th:text="${patient.dietOrder}"></td>
+                  <td id="hi" th:text="${patient.notes}"></td>
+                  
+                  <td th:text="${patient.admissionDate}"></td>
+                  <td th:text="${patient.companionName}"></td>
+            <td class="depart-col" th:text="${patient.registeredByDepartment}"></td>
+                      <td class="actions-column no-print">
+            <a th:href="@{'/patients/edit/' + ${patient.id}}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+        </td>
+       <td class="actions-column no-print">
+    <form th:action="@{'/patients/archive/' + ${patient.id}}" method="post" onsubmit="return confirm('Are you sure you want to archive this patient?');">
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+    </form>
+</td>
+               </tr>
+            </tbody>
+            <tfoot>
+               <tr>
+                  <td colspan="6"><strong>Total</strong></td>
+                  <td>
+                     <div class="pattern-feeds">
+                        <div id="totalN">0</div>
+                        <div id="totalC">0</div>
+                        <div id="totalS">0</div>
+                  <td colspan="4"></td> <!-- ترك خلايا فارغة للتقدم للعمود رقم 11 -->
+                  <td>
+                  <div id="totalCompanion">0</div> <!-- عرض العدد في العمود رقم 11 -->                 
+                  </td>
+                  
+                  </div>
+                  </td>
+               <!--   <td colspan="5"></td> -->
+               </tr>
+               <tr>
+                                 <td class="mosad" colspan="6" id="total1"><strong>Total number of companions and patients</strong></td>
+                                 <td class="mosad" colspan="9" id="total">0</td>
+                                                   
+                                 
+               
+               </tr>
+            </tfoot>
+         </table>
+          <!-- معلومات التوقيع بجانب بعضها -->
+    <div class="signature-section">
+        <div class="signature-container">
+            <div class="signature-column">
+                <div class="signature-title">NURSE OF WARD</div>
+                
+                <div class="signature-row">
+                    <span class="signature-label">Sign:</span>
+                    <span class="signature-field">.............................................</span>
+                </div>
+            </div>
+            <div class="signature-column">
+                <div class="signature-title">HEAD NURSE OF WARD</div>
+                
+                <div class="signature-row">
+                    <span class="signature-label">Sign:</span>
+                    <span class="signature-field">.............................................</span>
+                </div>
+            </div>
+            <div class="signature-column">
+                <div class="signature-title">DIETITIAN</div>
+             
+                <div class="signature-row">
+                    <span class="signature-label">Sign:</span>
+                    <span class="signature-field">.............................................</span>
+                </div>
+            </div>
+            <div class="signature-column">
+                <div class="signature-title">DIRECTOR</div>
+                <div class="signature-row">
+                    <span class="signature-label">Sign:</span>
+                    <span class="signature-field">.............................................</span>
+                </div>
+            </div>
+        </div>
+    </div>
+      <div class="notification-card" id="notificationCard">
+         <h2 class="new">New notifications</h2>
+         <ul class="notification-list">
+            <li th:each="notification : ${notifications}" th:if="${notification.status != 'read'}" id="notification-${notification.id}">
+              <div class="notification-info" id="print-section">
+    <div class="print-info">
+        <div><strong>Section :</strong> <span th:text="${notification.departmentName + ' ward'}"></span></div>
+        <div><strong>Diet :</strong> <span th:text="${notification.mealType}"></span></div>
+        <div><strong>Date :</strong> <span th:text="${notification.Timestamp}"></span></div>
+        <div><strong>Day :</strong> <span th:text="${notification.day}"></span></div>
+        <div><strong>Nurse Name :</strong> <span th:text="${notification.nurseName}"></span></div>
+        <div><strong>Nurse File Number :</strong> <span th:text="${notification.nurseFileNumber}"></span></div>
+    </div>
+</div>
+               <div class="notification-actions">
+                  <form th:action="@{/patients/updateNotificationStatus}" method="post" onsubmit="markAsRead(event, ${notification.id})">
+                     <input type="hidden" name="id" th:value="${notification.id}" />
+                     <input type="hidden" name="status" value="read" />
+                     <button type="submit" class="read-btn">Mark as Read</button>
+                  </form>
+               </div>
+            </li>
+         </ul>
+      </div>
+      
+     <div id="retrieveForm" class="form-popup">
+        <form th:action="@{/patients/retrieve-nurse-file}" method="post">
+            <label for="nurseFileNumber"><strong>Nurse File Number:</strong></label>
+            <input type="text" id="nurseFileNumber" name="nurseFileNumber" required />
+            <button type="submit">Retrieve</button>
+            <button type="button" class="close-btn" onclick="closeRetrieveForm()">Close</button>
+        </form>
+    </div>
+	<script src="/assets/js/jquery-3.5.1.min.js"></script>
+	     <script src="/assets/js/jspdf.umd.min.js"></script>
+	     <script src="/assets/js/jspdf.plugin.autotable.min.js"></script>
+		 <script>
+// Function to open the modal
+function openPrintModal() {
+    document.getElementById('printModal').style.display = 'block';
+}
+
+// Function to close the modal
+function closePrintModal() {
+    document.getElementById('printModal').style.display = 'none';
+}
+
+// Function to handle the print action
+function processPrint() {
+    const printType = document.getElementById('printTypeSelect').value.toLowerCase();
+    const specificPatientFileNo = document.getElementById('specificPatientFileNo').value.trim().toLowerCase();
+
+    if (!printType || (printType !== 'patient' && printType !== 'companion' && printType !== 'specific' && printType !== 'one')) {
+        alert("Please select a valid print type.");
+        return;
+    }
+
+    if (printType === 'specific' && specificPatientFileNo === '') {
+        alert("Please enter a fileNo for the specific patient.");
+        return;
+    }
+
+    if (printType === 'one') {
+        const fileNo = prompt("Enter the fileNo of the patient:");
+        if (fileNo) {
+            printThermal('specific', fileNo.trim().toLowerCase());
+        }
+        return;
+    }
+
+    // Close the modal
+    closePrintModal();
+
+    // Process the printing
+    printThermal(printType, specificPatientFileNo);
+}
+
+// Function to handle the printing logic
+function printThermal(printType, specificPatientFileNo) {
+    const departmentFilter = document.getElementById('departmentFilter').value.toLowerCase();
+    
+    const patientData = [];
+    const companionData = [];
+    let anyCheckboxSelected = false;
+
+    document.querySelectorAll('#patientsTable tbody tr').forEach(row => {
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        const departmentCell = row.querySelector('.depart-col');
+        const fileNo = row.querySelector('td:nth-child(2)').innerText.trim().toLowerCase();
+        const patientName = row.querySelector('td:nth-child(3)').innerText.trim().toLowerCase();
+        const companionName = row.querySelector('td:nth-child(11)').innerText.trim();
+
+        if (checkbox && checkbox.checked) {
+            anyCheckboxSelected = true;
+        }
+
+        if (checkbox && !checkbox.checked && anyCheckboxSelected) {
+            return; // Skip rows if there's a previously selected checkbox
+        }
+
+        if (departmentFilter !== 'all' && (departmentCell && departmentCell.innerText.trim().toLowerCase() !== departmentFilter)) {
+            return; // Skip rows that do not match the department filter
+        }
+
+        if (printType === 'specific' && patientName !== specificPatientFileNo && fileNo !== specificPatientFileNo) {
+            return;  // Skip rows that do not match the specific patient fileNo
+        }
+
+        const patient = {
+            name: patientName,
+            dietOrder: row.querySelector('td:nth-child(9)').innerText,
+            room: row.querySelector('td:nth-child(5)').innerText,
+            bed: row.querySelector('td:nth-child(6)').innerText,
+            companionName: companionName || '',
+            role: printType === 'companion' ? 'companion' : 'patient'
+        };
+
+        if (printType === 'companion') {
+            if (patient.companionName === '') {
+                return; // Skip printing if companion name is empty
+            }
+            patient.dietOrder = 'normal';
+            patient.name = patient.companionName;
+        }
+
+        // Separate patient and companion data
+        if (printType === 'specific') {
+            if (fileNo === specificPatientFileNo) {
+                patientData.push(patient); // Always push patient data
+
+                // If there's a companion name, push it as well
+                if (patient.companionName) {
+                    companionData.push({
+                        name: patient.companionName,
+                        dietOrder: 'normal',
+                        room: patient.room,
+                        bed: patient.bed,
+                        role: 'companion'
+                    });
+                }
+            }
+        } else {
+            patientData.push(patient);
+        }
+    });
+
+    if (patientData.length === 0) {
+        alert("No data found for the selected filter.");
+        return;
+    }
+
+    const today = new Date();
+    const dateString = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+    const departmentName = document.getElementById('departmentFilter').options[document.getElementById('departmentFilter').selectedIndex].text;
+
+    const printContent = `
+        <div style="font-size: 12px;">
+            ${patientData.map((patient, index) => `
+                <div style="width: 75mm; height: 75mm; margin: 2mm 0; padding: 1mm; box-sizing: border-box; page-break-inside: avoid;">
+                    <table style="width: 100%; height: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td colspan="2" style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle;">
+                                <strong>Date:</strong> ${dateString} 
+                                <span style="display: inline-block; width: 10px;"></span>
+                                <strong>Day:</strong> ${dayName} <br>
+                                <strong>Department:</strong> ${departmentName} <br>
+                                <strong>Role:</strong> ${patient.role === 'companion' ? 'Companion' : 'Patient'}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Name:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${patient.name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 30%;">
+                                <strong>Diet O:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 70%;">
+                                ${patient.dietOrder}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Room:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${patient.room}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Bed:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${patient.bed}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle;">
+                                مع تمنياتنا بالشفاء العاجل قسم التغذية <br> مستشفى الدوادمي
+                            </td>
+                        </tr>
+                    </table>
+                    <hr style="border: 1px solid black; margin: 2px 0;">
+                </div>
+            `).join('')}
+            ${companionData.map((companion) => `
+                <div style="width: 75mm; height: 75mm; margin: 2mm 0; padding: 1mm; box-sizing: border-box; page-break-inside: avoid;">
+                    <table style="width: 100%; height: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td colspan="2" style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle;">
+                                <strong>Date:</strong> ${dateString} 
+                                <span style="display: inline-block; width: 10px;"></span>
+                                <strong>Day:</strong> ${dayName} <br>
+                                <strong>Department:</strong> ${departmentName} <br>
+                                <strong>Role:</strong> Companion
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Name:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${companion.name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 30%;">
+                                <strong>Diet O:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 70%;">
+                                ${companion.dietOrder}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Room:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${companion.room}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 20%;">
+                                <strong>Bed:</strong>
+                            </td>
+                            <td style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; width: 80%;">
+                                ${companion.bed}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle;">
+                                مع تمنياتنا بالشفاء العاجل قسم التغذية <br> مستشفى الدوادمي
+                            </td>
+                        </tr>
+                    </table>
+                    <hr style="border: 1px solid black; margin: 2px 0;">
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Print</title><style>@media print { .no-print { display: none; } }</style></head><body>');
+    printWindow.document.write(printContent);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
+
+// Update the modal display logic based on print type selection
+document.getElementById('printTypeSelect').addEventListener('change', function() {
+    const specificPatientContainer = document.getElementById('specificPatientContainer');
+    if (this.value === 'specific') {
+        specificPatientContainer.style.display = 'block';
+    } else {
+        specificPatientContainer.style.display = 'none';
+    }
+});
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var table = document.getElementById("patientsTable");
+    var rows = table.querySelectorAll("tbody tr");
+    rows.forEach(function(row, index) {
+        var serialNoCell = row.querySelector("td:first-child");
+        serialNoCell.textContent = index + 1;
+    });
+});
+</script>
+
+   </body>
+</html>

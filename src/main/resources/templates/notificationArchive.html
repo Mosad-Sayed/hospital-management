@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Archive</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	     <link rel="stylesheet" href="/assets/css/all.min.css">
+	    <style>
+       body {
+            background: url('') no-repeat center center fixed, linear-gradient(to right, #00C851, #7ccaa3); /* دمج الصورة مع اللون */
+            background-size: 5px; /* تجعل الصورة تغطي الصفحة بالكامل */
+            background-blend-mode: overlay; /* دمج الصورة واللون */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 1600px;
+            max-height: 90vh; /* تحديد ارتفاع أقصى للحاوية */
+            overflow-y: auto; /* إضافة شريط تمرير عمودي عند الحاجة */
+            background: rgba(255, 255, 255, 0.9); /* تغيير الشفافية لتكون أوضح */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .search-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-box input {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+        }
+		table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-top: 20px;
+		    background-color: #d4edda; /* لون خلفية الجدول أخضر فاتح */
+		}
+
+		th, td {
+		    padding: 15px;
+		    text-align: left;
+		}
+
+		th {
+		    position: sticky;
+		    top: 0;
+		    background-color: #4b4b4b; /* لون خلفية غامق لرأس الجدول */
+		    color: black; /* لون النص أبيض */
+		    z-index: 1;
+		    background-image: linear-gradient(to right, #00C851, #7ccaa3); /* تدرج لوني كخلفية */
+		    background-size: cover; /* تغطية كاملة للخلفية */
+		}
+
+        td {
+            background-color: rgba(124,202,163,255);
+                                   background-size: 5px; /* تجعل الصورة تغطي الصفحة بالكامل */
+            
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .container, table {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @media print {
+            .print-btn, .print-selected-btn {
+                display: none; /* إخفاء أزرار الطباعة عند الطباعة */
+            }
+             #action {
+                display: none; /* إخفاء أزرار الطباعة عند الطباعة */
+            }
+         
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border: 1px solid #ddd;
+            }
+            h2 {
+                text-align: center;
+                font-size: 1.5rem;
+            }
+            /* إضافة رؤوس الأعمدة للطباعة */
+            .print-table th, .print-table td {
+                border: 1px solid #ddd;
+            }
+        }
+         .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #004d40;
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #00332b;
+            transform: scale(1.05);
+        }
+		
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Notification Archive</h2>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search...">
+    </div>
+    <button class="btn btn-success" onclick="window.history.back();">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <button class="btn btn-success print-selected-btn" id="printSelected">Print Selected Notifications</button>
+    <table class="table table-bordered print-table">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>#</th>
+          <th>Meal Type</th>
+          <th>Day</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+		  <th>Date</th>
+          <th>Department</th>
+          <th>NurseName</th>
+          <th>NurseFNo</th>
+          <th>Action</th> <!-- خانة Action -->
+        </tr>
+      </thead>
+      <tbody id="notificationTable">
+        <tr th:each="notification, iterStat : ${notifications}">
+          <td><input type="checkbox" class="notification-checkbox" data-id="${notification.id}"></td>
+          <td th:text="${iterStat.index + 1}">1</td>
+          <td th:text="${notification.mealType}">Breakfast</td>
+          <td th:text="${notification.day}">Sunday</td>
+          <td th:text="${notification.status}">Pending</td>
+          <td th:text="${notification.timestamp}">2024-07-28T12:34:56</td>
+		  <td th:text="${notification.date}">2024-07-28</td>
+          <td th:text="${notification.departmentName}">Pediatrics</td>
+          <td th:text="${notification.nurseName}">John Doe</td>
+          <td th:text="${notification.nurseFileNumber}">123456</td>
+          <td>
+            <button class="btn btn-info restore-btn" th:attr="data-id=${notification.id}">
+              <i class="fas fa-undo" style="color: yellow;"></i>
+            </button>
+            <button class="btn btn-danger delete-btn" th:attr="data-id=${notification.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+  	document.addEventListener('DOMContentLoaded', function() {
+  	    // ترتيب عكسي للجدول
+  	    const tableBody = document.getElementById('notificationTable');
+  	    const rows = Array.from(tableBody.querySelectorAll('tr')).reverse();
+  	    tableBody.innerHTML = ''; // إفراغ المحتوى الحالي للجدول
+  	    rows.forEach(row => tableBody.appendChild(row)); // إضافة الصفوف بالعكس
+
+  	    // إضافة حدث لزر الاسترجاع
+  	    document.querySelectorAll('.restore-btn').forEach(button => {
+  	        button.addEventListener('click', function() {
+  	            const notificationId = this.getAttribute('data-id');
+  	            
+  	            fetch(`/patients/notifications/restore/${notificationId}`, {
+  	                method: 'POST',
+  	                headers: {
+  	                    'Content-Type': 'application/json'
+  	                }
+  	            })
+  	            .then(response => {
+  	                if (response.ok) {
+  	                    alert('Notification restored successfully');
+  	                    location.reload(); // تحديث الصفحة لإظهار التغيير
+  	                } else {
+  	                    return response.json().then(data => {
+  	                        alert(`Failed to restore notification: ${data.message || 'Unknown error'}`);
+  	                    });
+  	                }
+  	            })
+  	            .catch(error => console.error('Error:', error));
+  	        });
+  	    });
+
+  	    // إضافة حدث لزر الحذف
+  	    document.querySelectorAll('.delete-btn').forEach(button => {
+  	        button.addEventListener('click', function() {
+  	            const notificationId = this.getAttribute('data-id');
+  	            if (confirm('Are you sure you want to delete this notification?')) {
+  	                fetch(`/patients/notifications/delete/${notificationId}`, {
+  	                    method: 'DELETE',
+  	                    headers: {
+  	                        'Content-Type': 'application/json'
+  	                    }
+  	                })
+  	                .then(response => {
+  	                    if (response.ok) {
+  	                        alert('Notification deleted successfully');
+  	                        location.reload(); // تحديث الصفحة لإظهار التغيير
+  	                    } else {
+  	                        return response.json().then(data => {
+  	                            alert(`Failed to delete notification: ${data.message || 'Unknown error'}`);
+  	                        });
+  	                    }
+  	                })
+  	                .catch(error => console.error('Error:', error));
+  	            }
+  	        });
+  	    });
+  	});
+  </script>
+
+</body>
+</html>

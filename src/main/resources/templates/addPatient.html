@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Patient</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	
+    <style>
+        /* إخفاء رسائل الخطأ افتراضيًا */
+        .error-message {
+            display: none;
+            color: red;
+            font-size: 0.875em; /* حجم الخط */
+            margin-left: 5px;
+        }
+
+        /* عرض رسالة الخطأ عند عدم إدخال بيانات */
+        input:required:invalid + .error-message {
+            display: inline;
+        }
+
+        /* إذا كنت تريد تحسين التنسيق، يمكنك إضافة استايلات أخرى هنا */
+        .red-text {
+            color: blue; /* تحديد اللون الأحمر للنص */
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .warning {
+            color: red;
+            display: none;
+        }
+        .error {
+            color: red;
+        }
+         @media print {
+            .btn {
+            display: none;
+            }
+    
+        }
+      
+    #normalDietTable .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* تنسيق رؤوس الجدول */
+#normalDietTable .table th {
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #007bff; /* زيادة سمك الحدود */
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* تنسيق خلايا الجدول */
+#normalDietTable .table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd; /* سمك الحدود أقل من رؤوس الجدول */
+    background-color: #f9f9f9;
+}
+
+/* تنسيق روابط في رأس الجدول */
+#normalDietTable .table thead a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#normalDietTable .table thead a:hover {
+    text-decoration: underline;
+}
+
+/* تنسيق الأسطر الزوجية */
+#normalDietTable .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* تنسيق الأسطر عند التمرير فوقها */
+#normalDietTable .table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* تحسينات التنسيق لخيارات العمود في جدول #other */
+#normalDietTable .hypo-normal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+#normalDietTable .form-check {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+#normalDietTable .form-check input {
+    margin-right: 10px;
+}
+
+/* تنسيق إضافي لفواصل رأسية أو أفقية بين العناصر */
+#normalDietTable .form-check:not(:last-child) {
+    border-right: 1px solid #ccc; /* خط فاصل بين العناصر */
+}
+   /* تحسينات التصميم للجدول الذي يحمل id="other" */
+      /* تنسيق الجدول */
+#childDietTable .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* تنسيق رؤوس الجدول */
+#childDietTable .table th {
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #007bff; /* زيادة سمك الحدود */
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* تنسيق خلايا الجدول */
+#childDietTable .table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd; /* سمك الحدود أقل من رؤوس الجدول */
+    background-color: #f9f9f9;
+}
+
+/* تنسيق روابط في رأس الجدول */
+#childDietTable .table thead a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#childDietTable .table thead a:hover {
+    text-decoration: underline;
+}
+
+/* تنسيق الأسطر الزوجية */
+#childDietTable .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* تنسيق الأسطر عند التمرير فوقها */
+#childDietTable .table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* تحسينات التنسيق لخيارات العمود في جدول #other */
+#childDietTable .hypo-normal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+#childDietTable .form-check {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+#childDietTable .form-check input {
+    margin-right: 10px;
+}
+
+/* تنسيق إضافي لفواصل رأسية أو أفقية بين العناصر */
+#childDietTable .form-check:not(:last-child) {
+    border-right: 1px solid #ccc; /* خط فاصل بين العناصر */
+}
+#specialDietTable .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* تنسيق رؤوس الجدول */
+#specialDietTable .table th {
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #007bff; /* زيادة سمك الحدود */
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* تنسيق خلايا الجدول */
+#specialDietTable .table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd; /* سمك الحدود أقل من رؤوس الجدول */
+    background-color: #f9f9f9;
+}
+
+/* تنسيق روابط في رأس الجدول */
+#specialDietTable .table thead a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#specialDietTable .table thead a:hover {
+    text-decoration: underline;
+}
+
+/* تنسيق الأسطر الزوجية */
+#specialDietTable .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* تنسيق الأسطر عند التمرير فوقها */
+#specialDietTable .table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* تحسينات التنسيق لخيارات العمود في جدول #other */
+#specialDietTable .hypo-normal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+#specialDietTable .form-check {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+#specialDietTable .form-check input {
+    margin-right: 10px;
+}
+
+/* تنسيق إضافي لفواصل رأسية أو أفقية بين العناصر */
+#specialDietTable .form-check:not(:last-child) {
+    border-right: 1px solid #ccc; /* خط فاصل بين العناصر */
+}
+        /* Enhancing Checkbox Columns */
+        .column-options {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .column-options .form-check {
+            flex: 1 1 45%;
+            margin: 5px 0;
+        }
+
+        /* Form Check Styling */
+        .form-check {
+            margin-bottom: 10px;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+        }
+
+        .form-check-label {
+            margin-left: 5px;
+        }
+       /* CSS مدمج لتحسين التصميم */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            position: relative;
+        }
+
+        .grid-container > div:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #ddd;
+            right: 0;
+        }
+
+        
+        
+        
+  /* تحسينات التصميم للجدول الذي يحمل id="other" */
+        #other .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #other .table th, #other .table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #other .table th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #other .table td {
+            background-color: #f9f9f9;
+        }
+
+        #other .table thead a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        #other .table thead a:hover {
+            text-decoration: underline;
+        }
+
+        #other .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #other .table tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* تحسينات التنسيق لخيارات العمود في جدول #other */
+        #other .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        #other .form-check {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        #other .form-check input {
+            margin-right: 10px;
+        }
+     .diet-suggestions {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 15px;
+        border: 2px solid #007BFF; /* الإطار */
+        border-radius: 10px; /* حواف دائرية للإطار */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للإطار */
+        background-color: #f9f9f9; /* لون خلفية لطيف */
+    }
+
+    .diet-suggestions a {
+        text-decoration: none;
+        color: #007BFF;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: 2px solid #007BFF;
+        transition: all 0.3s ease;
+        background-color: #fff; /* لون خلفية الروابط */
+    }
+
+    .diet-suggestions a:hover {
+        background-color: #007BFF;
+        color: #fff; /* تغيير اللون عند التمرير */
+        border-color: #0056b3;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* ظل عند التمرير */
+    }
+    </style>
+	<script>
+		    $(document).ready(function() {
+		        console.log("JavaScript and jQuery are loaded.");
+
+		        $('#fileNo').on('input', function() {
+		            console.log("Input detected"); // تأكيد عمل الحدث
+		            const fileNo = $(this).val();
+
+		            if (fileNo) {
+		                $.ajax({
+		                    url: '/patients/checkPatientExists',  // مسار الـ Controller
+		                    type: 'GET',
+		                    data: { fileNo: fileNo },
+		                    success: function(response) {
+		                        console.log("AJAX response:", response); // عرض النتيجة للتأكد
+		                        if (response) {
+		                            $('#fileNoError').text(response).show();
+		                        } else {
+		                            $('#fileNoError').hide();
+		                        }
+		                    },
+		                    error: function(xhr, status, error) {
+		                        console.error("AJAX Error:", status, error);
+		                    }
+		                });
+		            } else {
+		                $('#fileNoError').hide();
+		            }
+		        });
+		    });
+		</script>
+	<script>
+	    $(document).ready(function() {
+	        console.log("JavaScript and jQuery are loaded.");
+
+	        $('#fileNo').on('input', function() {
+	            console.log("Input detected"); // تأكيد عمل الحدث
+	            const fileNo = $(this).val();
+
+	            if (fileNo) {
+	                $.ajax({
+	                    url: '/patients/checkFileNo',  // مسار الـ Controller
+	                    type: 'GET',
+	                    data: { fileNo: fileNo },
+	                    success: function(response) {
+	                        console.log("AJAX response:", response); // عرض النتيجة للتأكد
+	                        if (response) {
+	                            $('#fileNoError').text(response).show();
+	                        } else {
+	                            $('#fileNoError').hide();
+	                        }
+	                    },
+	                    error: function(xhr, status, error) {
+	                        console.error("AJAX Error:", status, error);
+	                    }
+	                });
+	            } else {
+	                $('#fileNoError').hide();
+	            }
+	        });
+	    });
+	</script>
+	<script>
+	    $(document).ready(function() {
+	        $('#roomInput').change(function() {
+	            var selectedRoom = $(this).val(); // الحصول على الغرفة المختارة
+	            var bedInput = $('#bedInput');
+	            
+	            // إعادة تعيين القائمة وإضافة رسالة تحميل
+	            bedInput.empty();
+	            bedInput.append('<option value="">Loading beds...</option>');
+
+	            if (selectedRoom) {
+	                $.ajax({
+	                    url: '/patients/getBedsByRoom',
+	                    type: 'GET',
+	                    data: { room: selectedRoom },
+	                    dataType: 'json', // تحديد نوع البيانات المتوقعة
+	                    success: function(response) {
+	                        console.log("Beds fetched successfully:", response); // Debugging
+	                        bedInput.empty(); // مسح القائمة القديمة
+	                        bedInput.append('<option value="">Select Bed</option>'); // الخيار الافتراضي
+
+	                        if (response && response.length > 0) {
+	                            response.forEach(function(bed) {
+	                                bedInput.append('<option value="' + bed + '">' + bed + '</option>'); // إضافة الأسرّة
+	                            });
+	                        } else {
+	                            bedInput.append('<option value="">No beds available</option>'); // خيار في حالة عدم توفر أسرّة
+	                        }
+	                    },
+	                    error: function(xhr, status, error) {
+	                        console.error("Error fetching beds:", xhr.responseText || error); // Debugging
+	                        bedInput.empty();
+	                        bedInput.append('<option value="">Error fetching beds</option>'); // إضافة خيار في حالة الخطأ
+	                    }
+	                });
+	            } else {
+	                // في حالة عدم اختيار غرفة، إعادة تعيين القائمة
+	                bedInput.empty();
+	                bedInput.append('<option value="">Select Bed</option>');
+	            }
+	        });
+	    });
+	</script>
+
+</head>
+<body>
+	
+    <div class="container">
+        <div class="card">
+			<div class="card-header d-flex justify-content-between align-items-center">
+			    <h3 class="mb-0">Add Patient</h3>
+			    <button class="btn btn-success" onclick="window.history.back();">
+			        <i class="fas fa-arrow-left"></i> Back
+			    </button>
+				<div th:if="${errorMessage}" class="alert alert-warning">
+				        <p th:text="${errorMessage}"></p>
+				    </div>
+					<div id="fileNoError" class="alert alert-warning" style="display:none;"></div>
+
+            </div>
+            <div class="card-body">
+                <form th:action="@{/patients/add}" th:object="${patient}" method="post" id="patientForm" autocomplete="off" onsubmit="return validateFormOnSubmit()">
+                   
+					 <!-- حقول إدخال البيانات -->
+                    <div class="form-group">
+                        <label>File No:</label>
+                        <input type="text" class="form-control" th:field="*{fileNo}" id="fileNo" required  />
+                        <span class="error-message" id="bedError">This field is required.</span>
+
+						</div>
+						<div class="form-group">
+						  <label for="nameOfPatient">Name of Patient:</label>
+						  <input type="text" id="nameOfPatient" name="nameOfPatient" class="form-control" required oninput="validateName()" />
+						  <span class="error-message" id="bedError">This field is required.</span>
+						  <span class="error-message" id="nameError" style="display:none; color:red;">
+						    Please enter a valid full name (at least three words, each containing letters only).
+						  </span>
+						</div>
+                    <div class="form-group">
+                        <label>Age:</label>
+                        <input type="number" class="form-control" th:field="*{age}" id="ageInput" required />
+                        <span class="error-message" id="bedError">This field is required.</span>
+                        <div id="error-message" class="error"></div>
+                    </div>
+					<div class="form-group">
+					    <label>Room No:</label>
+					    
+					    <!-- عرض القائمة المنسدلة فقط إذا كان القسم MS -->
+					    <th:block th:if="${session.department == 'MS'}">
+					        <select class="form-control" id="roomInput" th:field="*{room}" required>
+					            <option value="">Select Room</option>
+					            <option th:each="room : ${rooms}" 
+					                    th:value="${room}" 
+					                    th:text="${room}"></option>
+					        </select>
+					    </th:block>
+
+					    <!-- عرض حقل إدخال نصي إذا لم يكن القسم MS -->
+					    <th:block th:unless="${session.department == 'MS'}">
+					        <input type="text" class="form-control" th:field="*{room}" placeholder="Enter Room No" required />
+					    </th:block>
+
+					    <span class="error-message" id="roomError">This field is required.</span>
+					</div>
+
+					<div class="form-group">
+					    <label>Bed No:</label>
+					    
+					    <!-- نفس المنطق ينطبق على السرير -->
+					    <th:block th:if="${session.department == 'MS'}">
+					        <select class="form-control" id="bedInput" th:field="*{bed}" required>
+					            <option value="">Select Bed</option>
+					        </select>
+					    </th:block>
+
+					    <th:block th:unless="${session.department == 'MS'}">
+					        <input type="text" class="form-control" th:field="*{bed}" placeholder="Enter Bed No" required />
+					    </th:block>
+
+					    <span class="error-message" id="bedError">This field is required.</span>
+					</div>
+
+                    <div class="form-group">
+                        <label>Diagnosis:</label>
+                        <input type="text" class="form-control" th:field="*{diagnosis}" required  />    
+                        <span class="error-message" id="nameError">This field is required.</span>
+                    </div>
+					<div class="form-group">
+					    <label for="isolationQuestion">Is the patient in an isolation room?</label>
+					    <div>
+					        <input type="radio" id="isolationYes" name="isolation" value="yes" onchange="updateDietOrderField(true)" />
+					        <label for="isolationYes">Yes</label>
+					    </div>
+					    <div>
+					        <input type="radio" id="isolationNo" name="isolation" value="no" onchange="updateDietOrderField(false)" />
+					        <label for="isolationNo">No</label>
+					    </div>
+					</div>
+				<!--	<div class="form-group">
+											    <label for="question">Does the patient have specific dietary restrictions or avoid certain foods?</label>
+											    <div>
+											        <input type="radio" id="yes" name="agreement" value="yes" onchange="updateNotesField(true)" />
+											        <label for="yes">Yes</label>
+											    </div>
+											    <div>
+											        <input type="radio" id="no" name="agreement" value="no" onchange="updateNotesField(false)" />
+											        <label for="no">No</label>
+											    </div>
+											</div>
+					-->
+                <!--    <div class="form-group">
+    <label class="red-text">Is the patient isolated or not?</label><br>
+    <input type="checkbox" id="allergicYes" name="allergic" value="yes"> Yes
+    <input type="checkbox" id="allergicNo" name="allergic" value="no"> No
+</div> -->
+<div class="form-group">
+                        <label>Pattern Feeds:</label>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="nor" th:field="*{patternFeeds}" value="N" onchange="toggleNormalDietTable(this)" /> 
+        Normal 
+        <span class="red-text">(patients who do not need a special diet, companions)</span>
+   </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="chi" th:field="*{patternFeeds}" value="C" onchange="toggleChildDietTable(this)" /> 
+                            Child 
+                            <span class="red-text">(all patients aged from 6 months to 12 years)</span>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="spe" th:field="*{patternFeeds}" value="S" onchange="toggleSpecialDietTable(this)" /> 
+                            Special 
+                            <span class="red-text">(all patients who need a special diet)</span>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="non" th:field="*{patternFeeds}" value="NF" onchange="toggleOtherDietTable(this)" />  
+                            Other 
+                            <span class="red-text">(NPO - Breast feeding - Water Only + MEDS - Out On Pass - Ngt)</span>
+                        </div>
+                        <div class="warning" id="warningMessage">Only one box must be selected</div>
+                    </div>
+                  
+
+<div class="form-group">
+    <label>Diet Order:</label>
+   <input type="text" id="dietOrder" class="form-control" th:field="*{dietOrder}" placeholder="Choose diet order" required readonly />
+   <span id="dietOrderError" style="color: red; display: none;">This field is required.</span>
+    </div>
+
+     <!-- Delete All Check checkbox -->
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="deleteAll" value="deleteAll" onchange="deleteAllChecks()" />  
+        Delete All Checks
+    </div>
+	
+<div id="normalDietTable" style="display:none;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="/pdf/NORMAL USES.pdf" target="_blank">Normal Diet (USES)</a>
+                </th>
+                <th>
+                    <a href="/pdf/hypo uses.pdf" target="_blank">HYPO NORMAL Diet (USES)</a>
+                </th>
+                <th>
+                    <a  target="_blank">OTHER</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="normalDietOptions" value="Regular Diet (Normal Diet)" onchange="updateDietOrder(this)" /> 
+                        Regular Diet (Normal Diet)
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="normalDietOptions" value="Regular Diet (Fasting Ramadan)" onchange="updateDietOrder(this)" /> 
+                        Regular Diet (Fasting Ramadan)
+                    </div>
+                </td>
+
+                <td>
+                    <div class="hypo-normal-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Meat (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Meat (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Fish (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Fish (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Chic (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Chic (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Lequmes (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Lequmes (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Eggs (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Eggs (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Dairy (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Dairy (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Gluten & Cereals (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Gluten & Cereals (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Veg (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Veg (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Fruits (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Fruits (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Soups (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Soups (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Drinks (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Drinks (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Oils & Fats (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Oils & Fats (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Nuts (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Nuts (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Sweet (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Sweet (N)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoNormalDietOptions" value="Hypo Other (N)" onchange="updateDietOrder(this)" /> 
+                            Hypo Other (N)
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Normal-Other" onchange="updateDietOrder(this)" /> 
+                        Normal-Other
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                      <div class="diet-suggestions">
+                        <a href="/pdf/diet suggestion 1.pdf" target="_blank">Diet suggestions 1</a>
+                        <a href="/pdf/diet suggestion 2.pdf" target="_blank">Diet suggestions 2</a>
+                        <a href="/pdf/hospital's intensive care. .pdf" target="_blank">Hospital's Intensive Care</a>
+                        <a href="/pdf/Most common food-drug interaction.pdf" target="_blank">Most common food-drug interaction</a>
+                        
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div id="childDietTable" style="display:none;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="/pdf/Child Uses pdf-1.pdf" target="_blank">Child Diet USES</a>
+                </th>
+                <th>
+                    <a href="/pdf/hypo uses.pdf" target="_blank">HYPO Child Diet USES</a>
+                </th>
+                <th>
+                    <a  target="_blank">OTHER</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                   <div class="hypo-normal-grid">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="P0 (6M-12M) Infant Normal" onchange="updateDietOrder(this)" /> 
+        P0 (6M-12M) Infant Normal
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="P1 (1Y-3Y) Normal" onchange="updateDietOrder(this)" /> 
+        P1 (1Y-3Y) Normal
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="P2 (4Y-7Y) Normal" onchange="updateDietOrder(this)" /> 
+        P2 (4Y-7Y) Normal
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="P3 (8Y-12Y) Normal" onchange="updateDietOrder(this)" /> 
+        P3 (8Y-12Y) Normal
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia BRAT Diet (SP)" onchange="updateDietOrder(this)" /> 
+        Pedia BRAT Diet (SP)
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Soft Diet" onchange="updateDietOrder(this)" /> 
+        Pedia Soft Diet 
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Diabetic Diet (IDDM)" onchange="updateDietOrder(this)" /> 
+        Pedia Diabetic Diet (IDDM)
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Fat Free Diet" onchange="updateDietOrder(this)" /> 
+        Pedia Fat Free Diet
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Liquid Diet" onchange="updateDietOrder(this)" /> 
+        Pedia Liquid Diet
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Cold Liquid Diet" onchange="updateDietOrder(this)" /> 
+        Pedia Cold Liquid Diet
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia Renal Diet" onchange="updateDietOrder(this)" /> 
+        Pedia Renal Diet
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="childDietOptions" value="Pedia High Calorie,High CHON" onchange="updateDietOrder(this)" /> 
+        Pedia High Calorie,High CHON
+    </div>
+    <!-- يمكنك تكرار العناصر حسب الحاجة -->
+</div>
+
+                </td>
+
+                <td>
+                    <div class="hypo-normal-grid" >
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Meat" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Meat
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Fish" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Fish
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Chic" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Chic
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Lequmes" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Lequmes
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Eggs" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Eggs
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Dairy" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Dairy
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Gluten & Cereals" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Gluten & Cereals
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Veg" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Veg
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Fruits" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Fruits
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Soups" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Soups
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo drinks" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo drinks
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Oils & Fats" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Oils & Fats
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Nuts" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Nuts
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo Sweet" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo Sweet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hypoChildDietOptions" value="Pedia Hypo- Other" onchange="updateDietOrder(this)" /> 
+                            Pedia Hypo- Other
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="otherChildDietOptions" value="CHILD-Other" onchange="updateDietOrder(this)" /> 
+                        CHILD-Other
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+           <tfoot>
+            <tr>
+                <td colspan="3">
+                     <div class="diet-suggestions">
+                        <a href="/pdf/diet suggestion 1.pdf" target="_blank">Diet suggestions 1</a>
+                        <a href="/pdf/diet suggestion 2.pdf" target="_blank">Diet suggestions 2</a>
+                        <a href="/pdf/hospital's intensive care. .pdf" target="_blank">Hospital's Intensive Care</a>
+                        <a href="/pdf/Most common food-drug interaction.pdf" target="_blank">Most common food-drug interaction</a>
+                        
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<!-- جدول الثاني مع التعديلات -->
+<div id="specialDietTable" style="display:none;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="/pdf/spical USES.pdf" target="_blank">SPEICAL (USES)</a>
+                </th>
+                <th>
+                    <a href="/pdf/hypo uses.pdf" target="_blank">SPEICAL HYPO (USES)	</a>
+                </th>
+                <th>
+                    <a  target="_blank">OTHER</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="grid-container">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="High Calorie & High CHON Diet" onchange="updateDietOrder(this)" /> 
+                            High Calorie & High CHON Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Renal Pre-ESRD Diet" onchange="updateDietOrder(this)" /> 
+                            Renal Pre-ESRD Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Renal Post-ESRD Diet" onchange="updateDietOrder(this)" /> 
+                            Renal Post-ESRD Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Low Fat Diet" onchange="updateDietOrder(this)" /> 
+                            Low Fat Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Fat Free (Low Cholesterol) Diet" onchange="updateDietOrder(this)" /> 
+                            Fat Free (Low Cholesterol) Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Low salt Diet (1200mg)" onchange="updateDietOrder(this)" /> 
+                            Low salt Diet (1200mg)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Salt Free Diet (500mg)" onchange="updateDietOrder(this)" /> 
+                            Salt Free Diet (500mg)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Diabetic Diet (IDDM)" onchange="updateDietOrder(this)" /> 
+                            Diabetic Diet (IDDM)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Diabetic Diet (NIDDM)" onchange="updateDietOrder(this)" /> 
+                            Diabetic Diet (NIDDM)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="High Fiber Diet" onchange="updateDietOrder(this)" /> 
+                            High Fiber Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Soft Diet" onchange="updateDietOrder(this)" /> 
+                            Soft Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Puree (Bland) Diet" onchange="updateDietOrder(this)" /> 
+                            Puree (Bland) Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Full Liquid Diet" onchange="updateDietOrder(this)" /> 
+                            Full Liquid Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Clear Liquid Diet" onchange="updateDietOrder(this)" /> 
+                            Clear Liquid Diet
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialDietOptions" value="Cold Liquid Diet" onchange="updateDietOrder(this)" /> 
+                            Cold Liquid Diet
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="grid-container">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Meat (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Meat (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Fish (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Fish (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Chic (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Chic (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Lequmes (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Lequmes (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Eggs (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Eggs (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Dairy (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Dairy (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Gluten & Cereals (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Gluten & Cereals (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Veg (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Veg (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Fruits (SP)" onchange="updateDietOrder(this)" /> 
+                            Hypo Fruits (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Soups (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo Soups (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo drinks (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo drinks (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Oils & Fats (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo Oils & Fats (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Nuts  (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo Nuts  (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo Sweet (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo Sweet (SP)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="specialHypoDietOptions" value="Hypo- Other (SP)" onchange="updateDietOrder(this)" /> 
+                               Hypo- Other (SP)
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="grid-container">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherSpecialDietOptions" value="SPEICAL-Other" onchange="updateDietOrder(this)" /> 
+                            SPEICAL-Other
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+       <tfoot>
+            <tr>
+                <td colspan="3">
+                      <div class="diet-suggestions">
+                        <a href="/pdf/diet suggestion 1.pdf" target="_blank">Diet suggestions 1</a>
+                        <a href="/pdf/diet suggestion 2.pdf" target="_blank">Diet suggestions 2</a>
+                        <a href="/pdf/hospital's intensive care. .pdf" target="_blank">Hospital's Intensive Care</a>
+                        <a href="/pdf/Most common food-drug interaction.pdf" target="_blank">Most common food-drug interaction</a>
+                        
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<!-- جدول مع التعديلات -->
+<div id="other" style="display:none;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="/pdf/N.G.T  USES.pdf" target="_blank">N.G.T. USES</a>
+                </th>
+                <th>
+                    <a  target="_blank">OTHER</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="grid-container" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (Standard 1.0)" onchange="updateDietOrder(this)" /> 
+                            OSF (Standard 1.0)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (Concentrated1.5)" onchange="updateDietOrder(this)" /> 
+                            OSF (Concentrated1.5)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (DIABETIC)" onchange="updateDietOrder(this)" /> 
+                            OSF (DIABETIC)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (HEPATIC)" onchange="updateDietOrder(this)" /> 
+                            OSF (HEPATIC)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (RENAL PRE)" onchange="updateDietOrder(this)" /> 
+                            OSF (RENAL PRE)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (RENAL POST)" onchange="updateDietOrder(this)" /> 
+                            OSF (RENAL POST)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (HIGH PRO)" onchange="updateDietOrder(this)" /> 
+                            OSF (HIGH PRO)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (RESPIRATORY)" onchange="updateDietOrder(this)" /> 
+                            OSF (RESPIRATORY)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF (CLEAR ONS)" onchange="updateDietOrder(this)" /> 
+                            OSF (CLEAR ONS)
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="+ Proten Powder" onchange="updateDietOrder(this)" /> 
+                            + Proten Powder
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="+ Fiber Powder" onchange="updateDietOrder(this)" /> 
+                            + Fiber Powder
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="+ Water" onchange="updateDietOrder(this)" /> 
+                            + Water
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="+ Bag Pump" onchange="updateDietOrder(this)" /> 
+                            + Bag Pump
+                        </div>
+                       
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="OSF-Other" onchange="updateDietOrder(this)" /> 
+                            OSF-Other
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="grid-container" >
+                       <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="NPO" onchange="updateDietOrder(this)" /> 
+                            NPO
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Water Only+MEDS" onchange="updateDietOrder(this)" /> 
+                            Water Only+MEDS
+                        </div>
+						<div class="form-check">
+						                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Water Only" onchange="updateDietOrder(this)" /> 
+						                            Water Only
+						                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Out On Pass" onchange="updateDietOrder(this)" /> 
+                            Out On Pass
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Breastfeeding" onchange="updateDietOrder(this)" /> 
+                            Breastfeeding
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="otherDietOptions" value="Other" onchange="updateDietOrder(this)" /> 
+                            Other
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <div class="diet-suggestions">
+                        <a href="/pdf/diet suggestion 1.pdf" target="_blank">Diet suggestions 1</a>
+                        <a href="/pdf/diet suggestion 2.pdf" target="_blank">Diet suggestions 2</a>
+                        <a href="/pdf/hospital's intensive care. .pdf" target="_blank">Hospital's Intensive Care</a>
+                        <a href="/pdf/Most common food-drug interaction.pdf" target="_blank">Most common food-drug interaction</a>
+                        
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+         <div class="form-group">
+    <label>Notes :</label>
+    <input type="text" id="notes" class="form-control" th:field="*{notes}" />
+    <span class="error-message" id="notesError">This field is required.</span>
+</div>           
+<div class="form-group">
+    <label>Admission Date:</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="admissionDate" th:field="*{admissionDate}" required />
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary" onclick="setTodayDate()">
+                <i class="fas fa-calendar-day"></i>
+            </button>
+        </div>
+    </div>
+    <span class="error-message" id="bedError">This field is required.</span>
+</div>
+                    <div class="form-group">
+                        <label>Companion Name:</label>
+                        <input type="text" id="companionName" name="companionName" class="form-control" oninput="validateCompanionName()"  />
+						<div id="companionName-error" class="error" style="color:red;"></div>
+                    </div>
+                     <!-- إضافة القائمة المنسدلة للأقسام -->
+					 <div class="form-group">
+					     <label for="department">Department:</label>
+					     <select id="department" name="department" class="form-control" required>
+					         <!-- إذا كان القسم Dietary، اعرض جميع الخيارات -->
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="PEDIATRICS">Pedia</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="NURSERY">NURSERY</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="MS">MS</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="MM">MM</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="ICU">ICU</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="CCU">CCU</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="OB">OB</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="AKU">AKU</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="FS">FS</option>
+					         <option th:if="${sessionDepartment == 'dietary'}" th:value="FM">FM</option>
+
+					         <!-- إذا لم يكن القسم Dietary، اعرض فقط القسم المحفوظ في الجلسة -->
+					         <option th:unless="${sessionDepartment == 'Dietary'}" th:value="${sessionDepartment}" th:text="${sessionDepartment != null ? sessionDepartment : 'Select Department'}" selected>
+					         </option>
+					     </select>
+					 </div>
+                    <!-- زر الإرسال -->
+					<button type="submit" class="btn btn-primary" onclick="return validateNameOnSubmit()">Add Patient</button>
+                    <button class="btn btn-success" onclick="window.history.back();">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-add no-print" onclick="window.print()">Print</button>
+                    
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePatternFeeds() {
+            var dietOrder = document.getElementById('dietOrder').value.toLowerCase();
+            document.getElementById('nor').checked = dietOrder.includes('n');
+            document.getElementById('chi').checked = dietOrder.includes('c');
+            document.getElementById('spe').checked = dietOrder.includes('s');
+            document.getElementById('non').checked = dietOrder.includes('nf');
+        }
+    </script>
+    <script>
+		
+   document.getElementById('allergicYes').addEventListener('change', function() {
+    var dietOrderField = document.getElementById('notes');
+    if (this.checked) {
+        document.getElementById('allergicNo').checked = false; // إلغاء تحديد "No"
+        if (!dietOrderField.value.includes('Allergic :')) {
+            dietOrderField.value += ' Allergic :'; // إضافة كلمة إلى حقل Diet Order
+        }
+    } else {
+        // إزالة كلمة "Allergic" من حقل Diet Order عند إلغاء تحديد "Yes"
+        dietOrderField.value = dietOrderField.value.replace(' Allergic :', '').trim();
+    }
+});
+
+document.getElementById('allergicNo').addEventListener('change', function() {
+    if (this.checked) {
+        document.getElementById('allergicYes').checked = false; // إلغاء تحديد "Yes"
+        // إزالة كلمة "Allergic" من حقل Diet Order عند تحديد "No"
+        var dietOrderField = document.getElementById('notes');
+        dietOrderField.value = dietOrderField.value.replace(' Allergic :', '').trim();
+    }
+});
+
+document.getElementById('patientForm').addEventListener('submit', function(event) {
+    var allergicYes = document.getElementById('allergicYes').checked;
+    var allergicNo = document.getElementById('allergicNo').checked;
+
+    if (!allergicYes && !allergicNo) {
+        event.preventDefault(); // إيقاف إرسال النموذج
+        alert("Please select if the patient is allergic.");
+    }
+});
+
+    
+        document.getElementById("patientForm").addEventListener("submit", function(event) {
+            var nameInput = document.getElementById("nameOfPatient").value.trim();
+            var ageInput = document.getElementById("ageInput").value.trim();
+            var errorMessage = document.getElementById("error-message");
+
+            // Regular expression to match names with 3 or 4 parts
+            var namePattern =  /^([a-zA-Z\u0600-\u06FF]{2,})\s+([a-zA-Z\u0600-\u06FF]{2,})\s+([a-zA-Z\u0600-\u06FF]{2,})(\s+[a-zA-Z\u0600-\u06FF]{2,})*$/;
+
+            if (!namePattern.test(nameInput)) {
+                errorMessage.textContent = "The patient's name must be three or four parts.";
+                event.preventDefault(); // Prevent form submission
+            } else if (ageInput === "" || isNaN(ageInput) || Number(ageInput) <= 0) {
+                errorMessage.textContent = "Please enter a valid age.";
+                event.preventDefault(); // Prevent form submission
+            } else {
+                errorMessage.textContent = ""; // Clear error message
+            }
+        });
+
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        const warningMessage = document.getElementById('warningMessage');
+        const form = document.getElementById('patientForm');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedBoxes = document.querySelectorAll('.form-check-input:checked');
+                if (checkedBoxes.length > 1) {
+                    warningMessage.style.display = 'block';
+                } else {
+                    warningMessage.style.display = 'none';
+                }
+            });
+        });
+
+        form.addEventListener('submit', (event) => {
+            const checkedBoxes = document.querySelectorAll('.form-check-input:checked');
+            if (checkedBoxes.length > 1) {
+                event.preventDefault();
+                warningMessage.style.display = 'block';
+                alert("You cannot register with more than one checkbox selected.");
+            }
+        });
+		
+    </script>
+    <script>
+		document.addEventListener('DOMContentLoaded', function() {
+		    // لا يوجد أي تغيير على القيمة الافتراضية
+		});
+
+		document.getElementById('ageInput').addEventListener('input', function() {
+		    if (Number(this.value) < 0) { // السماح بالقيمة 0
+		        this.value = '';
+		    }
+		});
+
+    </script>
+	<script>
+	document.getElementById('companionName').addEventListener('input', function() {
+	    var input = this.value.trim();
+	    var companionNameError = document.getElementById('companionName-error');
+	    var names = input.split(/\s+/).filter(Boolean); // تقسيم النص إلى كلمات والتأكد من أن كل كلمة غير فارغة
+
+	    // التحقق من وجود كلمتين على الأقل وكل كلمة تحتوي على أكثر من حرف واحد
+	    if (names.length < 2 || names.some(name => name.length < 2)) {
+	        companionNameError.textContent = 'Please enter the full name (at least two words, each with more than one character).';
+	    } else {
+	        companionNameError.textContent = ''; // مسح رسالة الخطأ
+	    }
+	});
+	</script>
+
+    <script>
+// دالة لعرض أو إخفاء الجدول
+function toggleTable() {
+    var table = document.getElementById('dietOrderTable');
+    if (table.style.display === "none") {
+        table.style.display = "block";
+    } else {
+        table.style.display = "none";
+    }
+}
+
+// دالة لتحديد الخيار وإدراجه في الحقل
+function selectDietOrder(dietOrder) {
+    document.getElementById('dietOrder').value = dietOrder;
+    document.getElementById('dietOrderTable').style.display = "none"; // إخفاء الجدول بعد الاختيار
+}
+</script>
+<!-- JavaScript Code -->
+
+<script>
+	
+    // إخفاء كل الجداول
+    function hideAllTables() {
+        const tables = ['normalDietTable', 'childDietTable', 'specialDietTable', 'other'];
+        tables.forEach(tableId => {
+            const table = document.getElementById(tableId);
+            if (table) {
+                table.style.display = 'none';
+            }
+        });
+    }
+
+    // إلغاء تحديد كل مربعات الاختيار
+    function uncheckAllCheckboxes() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        hideAllTables();  // إخفاء جميع الجداول بعد إلغاء التحديد
+        clearDietOrder();  // مسح الحقول المرتبطة
+    }
+
+    // دالة إلغاء كل الشيك بوكس عند الضغط على Delete All Checks
+    function deleteAllChecks() {
+        uncheckAllCheckboxes();  // إلغاء تحديد كل مربعات الاختيار
+        document.getElementById('deleteAll').checked = false;  // إلغاء تحديد مربع Delete All بعد التنفيذ
+    }
+
+    // عرض الجدول المرتبط بمربع الاختيار المحدد وإخفاء البقية
+    function toggleNormalDietTable(checkbox) {
+        uncheckAllCheckboxes();  // إلغاء تحديد جميع مربعات الاختيار
+        checkbox.checked = true;  // تحديد المربع الحالي
+        hideAllTables();  // إخفاء جميع الجداول
+        if (checkbox.checked) {
+            document.getElementById('normalDietTable').style.display = 'block';  // عرض جدول Normal فقط
+        }
+    }
+
+    function toggleChildDietTable(checkbox) {
+        uncheckAllCheckboxes();  // إلغاء تحديد جميع مربعات الاختيار
+        checkbox.checked = true;  // تحديد المربع الحالي
+        hideAllTables();  // إخفاء جميع الجداول
+        if (checkbox.checked) {
+            document.getElementById('childDietTable').style.display = 'block';  // عرض جدول Child فقط
+        }
+    }
+
+    function toggleSpecialDietTable(checkbox) {
+        uncheckAllCheckboxes();  // إلغاء تحديد جميع مربعات الاختيار
+        checkbox.checked = true;  // تحديد المربع الحالي
+        hideAllTables();  // إخفاء جميع الجداول
+        if (checkbox.checked) {
+            document.getElementById('specialDietTable').style.display = 'block';  // عرض جدول Special فقط
+        }
+    }
+
+    function toggleOtherDietTable(checkbox) {
+        uncheckAllCheckboxes();  // إلغاء تحديد جميع مربعات الاختيار
+        checkbox.checked = true;  // تحديد المربع الحالي
+        hideAllTables();  // إخفاء جميع الجداول
+        if (checkbox.checked) {
+            document.getElementById('other').style.display = 'block';  // عرض جدول Other فقط
+        }
+    }
+
+    // قائمة الخيارات التي تؤثر على حقل notes
+    const validOptions = [
+        "Normal-Other", 
+        "Hypo Other (N)", 
+        "Pedia Hypo- Other", 
+        "CHILD-Other", 
+        "Hypo- Other (SP)", 
+        "SPEICAL-Other", 
+        "+ Time", 
+        "OSF-Other", 
+        "Other"
+    ];
+
+	// تحديث خانة dietOrder
+	function updateDietOrder() {
+	    const dietOrderInput = document.getElementById('dietOrder');
+	    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+	    clearDietOrder();  // مسح القيم الحالية
+
+	    let selectedValues = [];
+	    checkboxes.forEach(checkbox => {
+	        // إذا كانت القيمة ليست واحدة من القيم التي لا نريد إضافتها
+	        if (checkbox.value !== "" && !['N', 'C', 'S', 'NF'].includes(checkbox.value)) {
+	            selectedValues.push(checkbox.value);
+	        }
+
+	        // فقط الخيارات المسموح بها تؤثر على حقل notes
+	        if (validOptions.includes(checkbox.value)) {
+	            updateNotesField(checkbox.value, true);
+	        }
+	    });
+
+	    // تحديث حقل dietOrder بالقيم التي تم تجميعها فقط
+	    if (selectedValues.length > 0) {
+	        dietOrderInput.value = selectedValues.join(', ');
+	    }
+	}
+
+
+    // تحديث أو إزالة النص من حقل notes
+	function updateNotesField(value, add) {
+	    const notesInput = document.getElementById('dietOrder');
+	    
+	    const validOptions = [
+	        "Normal-Other", 
+	        "Hypo Other (N)", 
+	        "Pedia Hypo- Other", 
+	        "CHILD-Other", 
+	        "Hypo- Other (SP)", 
+	        "SPEICAL-Other", 
+	        "+ Time", 
+	        "OSF-Other", 
+	        "Other"
+	    ];
+
+	    let currentNotes = notesInput.value;
+
+	    if (add) {
+	        // إذا كانت القيمة موجودة في الخيارات المسموحة، أزل readonly وأضف النص مع النقطتين
+	        if (validOptions.includes(value)) {
+	            notesInput.removeAttribute("readonly");
+	            if (!currentNotes.includes(value + ":")) { // تأكد من عدم وجود الكلمة مسبقًا مع النقطتين
+	                notesInput.value += (currentNotes ? " " : "") + value + ": ";  // إضافة النص مع النقطتين
+	                notesInput.focus();  // وضع التركيز على الحقل
+	                notesInput.setSelectionRange(notesInput.value.length, notesInput.value.length); // وضع المؤشر بعد النص
+	            }
+	        }
+	    } else {
+	        // إزالة الكلمة المطلوبة مع النقطتين
+	        const updatedNotes = currentNotes.replace(value + ": ", '').trim();
+	        notesInput.value = updatedNotes;
+
+	        // تحقق إذا كان الحقل يحتوي على أي من الكلمات المسموحة بعد الحذف
+	        const hasValidOption = validOptions.some(option => notesInput.value.includes(option + ":"));
+	        
+	        // إذا لم يبق أي من الكلمات المسموحة، أعد تعيين readonly
+	        if (!hasValidOption) {
+	            notesInput.setAttribute("readonly", true);
+	        }
+	    }
+	}
+
+    // التعامل مع تحديد أو إلغاء تحديد الشيك بوكس
+    function toggleCheckbox(checkbox) {
+        if (checkbox.checked) {
+            if (validOptions.includes(checkbox.value)) {
+                updateNotesField(checkbox.value, true);  // إضافة النص
+            }
+        } else {
+            if (validOptions.includes(checkbox.value)) {
+                updateNotesField(checkbox.value, false);  // إزالة النص
+            }
+        }
+        updateDietOrder();  // تحديث dietOrder بعد كل تغيير
+    }
+
+    // ربط كل الشيك بوكس بحدث onChange
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            toggleCheckbox(checkbox);
+        });
+    });
+
+    // مسح محتوى dietOrder
+    function clearDietOrder() {
+        const dietOrderInput = document.getElementById('dietOrder');
+        dietOrderInput.value = '';  // مسح محتوى الحقل
+    }
+</script>
+</script>
+<!--
+<script>
+function updateNotesField(isAgreed) {
+    const notesField = document.getElementById('notes');
+
+    if (isAgreed) {
+        notesField.value = "specific foods avoided:";
+    } else {
+        notesField.value = ""; // Clear the text if "No" is selected
+        document.getElementById('yes').checked = false; // Optional: Uncheck "Yes"
+    }
+}
+
+</script>
+-->
+<script>
+    function updateDietOrderField(isIsolation) {
+        const dietOrderField = document.getElementById('dietOrder');
+
+        if (isIsolation) {
+            // إضافة "Isolation" فقط إذا لم تكن موجودة بالفعل
+            if (!dietOrderField.value.includes('Isolation')) {
+                dietOrderField.value = 'Isolation';
+            }
+            dietOrderField.setAttribute("readonly", true);
+            dietOrderField.dataset.locked = "true";
+        } else {
+            dietOrderField.value = '';
+            dietOrderField.dataset.locked = "false";
+        }
+    }
+
+    // استخدام MutationObserver لمراقبة التغييرات على الحقل dietOrder
+    const dietOrderField = document.getElementById('dietOrder');
+    const observer = new MutationObserver(() => {
+        if (dietOrderField.dataset.locked === "true" && !dietOrderField.value.includes('Isolation')) {
+            // ضمان بقاء "Isolation" موجودة
+            dietOrderField.value = `Isolation, ${dietOrderField.value}`.trim();
+        }
+    });
+
+    // مراقبة التغييرات على الحقل
+    observer.observe(dietOrderField, { attributes: true, childList: true, subtree: true, characterData: true });
+
+    // منع أي تعديل يدوي على الحقل dietOrder
+    dietOrderField.addEventListener('input', function () {
+        if (this.dataset.locked === "true" && !this.value.includes('Isolation')) {
+            this.value = `Isolation, ${this.value}`.trim();
+        }
+    });
+
+    // التعامل مع checkboxes وتحديث حقل dietOrder مع استبعاد القيم 'N', 'C', 'S', 'NF'
+    function updateDietOrder() {
+        const selectedValues = [];
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+        checkboxes.forEach(checkbox => {
+            // إضافة القيم المختارة ما عدا 'N', 'C', 'S', 'NF'
+            if (checkbox.value !== "" && !['N', 'C', 'S', 'NF'].includes(checkbox.value)) {
+                selectedValues.push(checkbox.value);
+            }
+        });
+
+        // إذا كانت حالة العزل مفعلة، تأكد من أن "Isolation" تبقى وتضاف معها القيم الأخرى
+        if (dietOrderField.dataset.locked === "true") {
+            if (!selectedValues.includes('Isolation')) {
+                selectedValues.unshift('Isolation');
+            }
+            dietOrderField.value = selectedValues.join(', ');
+        } else {
+            dietOrderField.value = selectedValues.join(', ');
+        }
+    }
+
+    // ربط checkboxes بتحديث الحقل عند التغيير
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateDietOrder);
+    });
+	
+</script>
+
+<script>
+
+	
+function validateDietOrder() {
+    var dietOrderInput = document.getElementById("dietOrder").value.trim();
+    var dietOrderError = document.getElementById("dietOrderError");
+
+    if (dietOrderInput === "") {
+        dietOrderError.style.display = "block"; // عرض رسالة الخطأ إذا كان الحقل فارغًا
+        return false; // العودة بقيمة خطأ
+    } else {
+        dietOrderError.style.display = "none"; // إخفاء رسالة الخطأ إذا كان الحقل غير فارغ
+        return true; // العودة بقيمة صحيحة
+    }
+}
+
+function validateFormOnSubmit() {
+    return validateName() && validateDietOrder(); // التحقق من كلا الحقلين عند الإرسال
+
+	}
+
+</script>
+
+<script>
+    document.getElementById('roomInput').addEventListener('keypress', function (e) {
+        // منع أي حرف غير رقمي
+        if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    document.getElementById('roomInput').addEventListener('input', function (e) {
+        this.value = this.value.replace(/[^0-9]/g, ''); // إزالة الأحرف غير الرقمية
+    });
+</script>
+<script>
+    document.getElementById("ageInput").addEventListener("input", function () {
+        const age = parseInt(this.value, 10);
+        const childCheckbox = document.getElementById("chi");
+        const otherCheckbox = document.getElementById("non");
+        const otherCheckboxes = ["nor", "spe"];
+
+        // Reset checkboxes and warnings
+        otherCheckbox.checked = false;
+        childCheckbox.checked = false;
+        childCheckbox.disabled = false;
+        otherCheckbox.disabled = false;
+        document.getElementById("warningMessage").style.display = "none";
+
+        if (!isNaN(age)) {
+            if (age >= 0 && age <= 12) {
+                // Enable child checkbox
+                childCheckbox.disabled = false;
+                toggleChildDietTable(false);
+
+                // Enable "other" checkbox
+                otherCheckbox.disabled = false;
+                toggleOtherDietTable(false);
+
+                // Disable other unrelated checkboxes
+                otherCheckboxes.forEach(id => {
+                    document.getElementById(id).disabled = true;
+                    toggleTable(id + "DietTable", false);
+                });
+            } else {
+                // Disable child checkbox
+                childCheckbox.checked = false;
+                childCheckbox.disabled = true;
+                toggleChildDietTable(false);
+
+                // Enable "other" checkbox
+                otherCheckbox.disabled = false;
+                toggleOtherDietTable(false);
+
+                // Enable other unrelated checkboxes
+                otherCheckboxes.forEach(id => {
+                    document.getElementById(id).disabled = false;
+                    toggleTable(id + "DietTable", false);
+                });
+            }
+        }
+    });
+
+
+    function toggleTable(tableId, show) {
+        const table = document.getElementById(tableId);
+        if (table) {
+            table.style.display = show ? "block" : "none";
+        }
+    }
+	
+</script>
+<script>
+    function setTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear().toString().slice(-2); // الحصول على آخر رقمين من السنة
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // الحصول على الشهر مع إضافة صفر إذا لزم الأمر
+        const day = today.getDate().toString().padStart(2, '0'); // إضافة صفر إذا كان اليوم أقل من 10
+        const formattedDate = `${day}-${month}-${year}`; // صيغة اليوم-الشهر-السنة (مثل 15-01-25)
+        document.getElementById('admissionDate').value = formattedDate;
+    }
+</script>
+<script>
+	// التعبير المنتظم للتحقق من الاسم الكامل للمريض (كما في الكود القديم)
+	const namePatternPatient = /^[a-zA-Z\u0600-\u06FF]{3,}\s+[a-zA-Z\u0600-\u06FF]{3,}\s+[a-zA-Z\u0600-\u06FF]{3,}(\s+[a-zA-Z\u0600-\u06FF]{3,})*$/;
+
+	// التعبير المنتظم للتحقق من اسم المرافق (اسمين فقط)
+	const namePatternCompanion = /^[a-zA-Z\u0600-\u06FF]{3,}\s+[a-zA-Z\u0600-\u06FF]{3,}(\s+[a-zA-Z\u0600-\u06FF]{3,})?$/;
+
+	function validateName() {
+		const nameInput = document.getElementById('nameOfPatient');
+		const nameError = document.getElementById('nameError');
+
+		const fullName = nameInput.value.trim();
+
+		// التحقق من النمط
+		if (!namePatternPatient.test(fullName)) {
+			nameError.style.display = 'block';
+			return false;
+		} else {
+			nameError.style.display = 'none';
+			return true;
+		}
+	}
+
+	function validateCompanionName() {
+	    const companionInput = document.getElementById('companionName');
+	    const companionError = document.getElementById('companionName-error');
+	    const companionName = companionInput.value.trim();
+
+	    // السماح بترك الحقل فارغًا
+	    if (!companionName) {
+	        companionError.textContent = ''; // لا توجد رسالة خطأ عند ترك الحقل فارغًا
+	        return true;
+	    }
+
+	    // التحقق من النمط إذا كان هناك إدخال
+	    if (!namePatternCompanion.test(companionName)) {
+	        companionError.textContent = 'The name of the companion must consist of two or three names (each name must contain at least 3 letters).';
+	        return false;
+	    }
+
+	    // التحقق من التكرار في نفس القسم
+	    const department = '<%= request.getSession().getAttribute("department") %>'; // احصل على القسم من الجلسة
+
+	    fetch(`/patients/checkCompanionName?name=${companionName}&department=${department}`)
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error('Network response was not ok');
+	            }
+	            return response.json();
+	        })
+	        .then(data => {
+	            if (data.exists) {
+	                companionError.textContent = 'Companion name already exists in this department.'; // اسم المرافق مكرر
+	            } else {
+	                companionError.textContent = ''; // اسم المرافق غير مكرر
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error checking companion name:', error);
+	            companionError.textContent = 'An error occurred while checking the companion name.'; // حدث خطأ أثناء التحقق
+	        });
+
+	    // لا نعيد أي قيمة هنا لأننا نعتمد على الرد من الخادم
+	}
+
+	function validateNameOnSubmit() {
+		const isPatientNameValid = validateName();
+		const isCompanionNameValid = validateCompanionName();
+		const isvalidateForm = validateForm();
+
+
+		return isPatientNameValid && isCompanionNameValid && isvalidateForm ;
+	}
+</script>
+
+<script>
+    function validateForm() {
+        const isolationYes = document.getElementById('isolationYes').checked;
+        const isolationNo = document.getElementById('isolationNo').checked;
+
+        if (!isolationYes && !isolationNo) {
+            alert('Please select if the patient is in an isolation room.');
+            return false; // تمنع الإرسال
+        }
+
+        return true; // يسمح بالإرسال
+    }
+</script>
+</body>
+</html>

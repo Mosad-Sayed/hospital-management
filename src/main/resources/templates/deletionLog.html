@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Deletion Log</title>
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	      <link rel="stylesheet" href="/assets/css/all.min.css">
+		  <style>
+        body {
+            background: linear-gradient(to right, #f5f5f5, #e0e0e0);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table.table th,
+        table.table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+		.table th {
+				    position: sticky; /* تثبيت رأس الجدول */
+				    top: 0; /* يثبت الرأس عند أعلى الجدول */
+				    background-color: #004d40; /* لون الخلفية لرأس الجدول */
+				    color: white; /* لون النص */
+				    z-index: 1; /* يضمن أن الرأس يظل فوق باقي الجدول */
+					white-space: nowrap; /* منع تجاوز النص */
+
+				}
+
+        .delete-icon {
+            cursor: pointer;
+            color: red;
+            font-size: 1.2rem;
+        }
+
+        .delete-icon:hover {
+            text-decoration: underline;
+        }
+
+        .search-input {
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-back {
+            background-color: #007bff;
+            color: white;
+            border-radius: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-link {
+            border: none;
+            background: none;
+            padding: 0;
+        }
+                @media print {
+     #searchInput,
+    .btn, 
+    .search-container, 
+    #action, 
+    .navbar, /* افتراضياً إذا كان هناك شريط تنقل */
+    .footer { /* افتراضياً إذا كان هناك تذييل */
+        display: none !important;
+    }
+}
+.button-container {
+    display: flex;
+    gap: 10px; /* المسافة بين الأزرار */
+    justify-content: center; /* لتوسيع الأزرار بشكل متساوي */
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-back {
+    background-color: #6c757d; /* لون الخلفية للزر "Back" */
+}
+
+.btn-back:hover {
+    background-color: #5a6268; /* اللون عند المرور فوق الزر "Back" */
+}
+
+.btn-print {
+    background-color: #007bff; /* لون الخلفية للزر "Print" */
+}
+
+.btn-print:hover {
+    background-color: #0056b3; /* اللون عند المرور فوق الزر "Print" */
+}
+
+.btn i {
+    margin-right: 5px; /* المسافة بين الأيقونة والنص */
+}
+@media print {
+
+	       .table th {
+	       background-color: #d3d3d3  !important; /* لون خلفية الرأس عند الطباعة */
+	       color: black !important; /* لون نص الرأس عند الطباعة */
+	       text-align: center;
+	       vertical-align: middle;
+	       padding: 15px 10px;
+	       white-space: nowrap;
+		 position: static; /* إلغاء التثبيت للطباعة */
+
+	       }
+		   }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5 fade-in">
+        <h2 class="mb-4 text-center">Patient Deletion Log</h2>
+        <div class="d-flex justify-content-between mb-3">
+            <input id="searchInput" type="text" class="search-input w-50" placeholder="Search by username, department, or file no...">
+          <div class="button-container">
+    <a class="btn btn-back" href="javascript:window.history.back()">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <button id="action" class="btn btn-print" onclick="window.print()">
+        <i class="fas fa-print"></i> Print
+    </button>
+</div>
+        </div>
+   
+        <table class="table table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Department</th>
+                    <th>Deletion Time</th>
+                    <th>Patient File No</th>
+                    <th id="action">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="deletionLogTable">
+                <tr th:each="log : ${deletionLogs}">
+                    <td></td>
+                    <td th:text="${log.username}"></td>
+                    <td th:text="${log.department}"></td>
+                    <td th:text="${log.deletionTime}"></td>
+                    <td th:text="${log.patientFileNo}"></td>
+                    <td id="action">
+                        <!-- زر حذف مع أيقونة -->
+                        <form th:action="@{/patients/delete/{id}(id=${log.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this log?');">
+                            <button type="submit" class="btn btn-link p-0">
+                                <i class="fas fa-trash delete-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#deletionLogTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+        <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var table = document.getElementById("deletionLogTable");
+    var rows = table.querySelectorAll("tbody tr");
+    rows.forEach(function(row, index) {
+        var serialNoCell = row.querySelector("td:first-child");
+        serialNoCell.textContent = index + 1;
+    });
+});
+</script>
+</body>
+</html>

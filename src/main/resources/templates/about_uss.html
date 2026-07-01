@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Nutrition</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            overflow-x: hidden;
+        }
+        nav {
+            background-color: #007bff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+        .hero {
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            animation: heroAnimation 1.5s ease-in-out;
+			 overflow: hidden;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://marketplace.canva.com/EAF4ar6LzGk/1/0/1600w/canva-green-and-beige-illustrative-healthy-food-presentation-ZN3HuSNrerM.jpg') center/cover no-repeat;
+        
+        }
+        @keyframes heroAnimation {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #007bff;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: #007bff;
+            bottom: 0;
+            left: 0;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.5s ease-out;
+        }
+        .section-title:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+        .mission, .vision {
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+        }
+        .mission {
+            animation-delay: 0.5s;
+        }
+        .vision {
+            animation-delay: 0.7s;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .mission p, .vision p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #555;
+            padding: 0 20px;
+        }
+        .team {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.9s;
+        }
+        .team-member {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 250px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .team-member img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .team-member h3 {
+            font-size: 22px;
+            margin: 15px 0;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .team-member p {
+            font-size: 16px;
+            color: #666;
+            padding: 0 15px 20px;
+            transition: color 0.3s;
+        }
+        .team-member p:hover {
+            color: #343a40;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/patients/home">Home</a>
+        <a href="/patients/about">About Us</a>
+    </nav>
+
+    <div class="hero">
+        Welcome to the Nutrition
+    </div>
+
+    <div class="container">
+        <div class="mission">
+            <h2 class="section-title">Our Mission</h2>
+            <p>
+                At Nutrition, our mission is to provide the highest quality care to all patients, promoting healing and well-being through scientifically based practices. We are dedicated to supporting our patients' health and recovery by offering personalized plans and education tailored to individual needs.
+            </p>
+        </div>
+
+        <div class="vision">
+            <h2 class="section-title">Our Vision</h2>
+            <p>
+                Our vision is to be a leading department, recognized for our commitment to excellence in patient care, education, and innovation. We strive to improve the health outcomes of our patients through evidence-based practices and compassionate care.
+            </p>
+        </div>
+
+        <div class="team">
+            <div class="team-member">
+                <img src="/images/1723484536740.jpg/" alt="Dr. Sarah Johnson">
+                <h3>Dr. Ayman Nada</h3>
+                <p>Chief Nutritionist with over 15 years of experience in clinical nutrition, specializing in metabolic diseases and patient recovery.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2024 All rights reserved. Designed by Eng. Mossad El-Sayed
+    </footer>
+</body>
+</html>

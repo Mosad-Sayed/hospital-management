@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Options Management</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --special-color: #3498db;
+            --hypo-color: #2ecc71;
+            --other-color: #f39c12;
+            --back-button-color: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        h1 {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-back {
+            background-color: var(--back-button-color);
+            color: white;
+        }
+        
+        .btn-back:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-1px);
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+        
+        .section-title {
+            background-color: var(--light-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 30px 0 15px 0;
+            border-left: 4px solid;
+        }
+        
+        .special-title {
+            border-left-color: var(--special-color);
+        }
+        
+        .hypo-title {
+            border-left-color: var(--hypo-color);
+        }
+        
+        .other-title {
+            border-left-color: var(--other-color);
+        }
+        
+        .section-title h4 {
+            color: var(--dark-color);
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background-color: var(--light-color);
+        }
+        
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .special-table thead {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .hypo-table thead {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .other-table thead {
+            background-color: rgba(243, 156, 18, 0.1);
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Diet Options Management</h1>
+            <div class="header-actions">
+                <a href="javascript:history.back()" class="btn btn-back">Back</a>
+                <a th:href="@{/diet-options/add}" class="btn btn-primary">Add New Diet Option</a>
+            </div>
+        </div>
+
+        <!-- Special Options Section -->
+        <div class="section-title special-title">
+            <h4>Special Options (SPECIAL)</h4>
+        </div>
+        <table class="special-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Label</th>
+                    <th>Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="option : ${specialOptions}">
+                    <td th:text="${option.id}"></td>
+                    <td th:text="${option.label}"></td>
+                    <td th:text="${option.value}"></td>
+                    <td>
+                        <div class="table-actions">
+                            <a th:href="@{/diet-options/edit/{id}(id=${option.id})}" class="btn btn-warning btn-sm">Edit</a>
+                            <a th:href="@{/diet-options/delete/{id}(id=${option.id})}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this diet option?')">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(specialOptions)}">
+                    <td colspan="4" class="empty-message">No special options available</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Special Hypo Options Section -->
+        <div class="section-title hypo-title">
+            <h4>Special Hypo Options (SPECIAL_HYPO)</h4>
+        </div>
+        <table class="hypo-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Label</th>
+                    <th>Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="option : ${specialHypoOptions}">
+                    <td th:text="${option.id}"></td>
+                    <td th:text="${option.label}"></td>
+                    <td th:text="${option.value}"></td>
+                    <td>
+                        <div class="table-actions">
+                            <a th:href="@{/diet-options/edit/{id}(id=${option.id})}" class="btn btn-warning btn-sm">Edit</a>
+                            <a th:href="@{/diet-options/delete/{id}(id=${option.id})}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this diet option?')">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(specialHypoOptions)}">
+                    <td colspan="4" class="empty-message">No special hypo options available</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Other Special Options Section -->
+        <div class="section-title other-title">
+            <h4>Other Special Options (OTHER_SPECIAL)</h4>
+        </div>
+        <table class="other-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Label</th>
+                    <th>Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="option : ${specialOtherOptions}">
+                    <td th:text="${option.id}"></td>
+                    <td th:text="${option.label}"></td>
+                    <td th:text="${option.value}"></td>
+                    <td>
+                        <div class="table-actions">
+                            <a th:href="@{/diet-options/edit/{id}(id=${option.id})}" class="btn btn-warning btn-sm">Edit</a>
+                            <a th:href="@{/diet-options/delete/{id}(id=${option.id})}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this diet option?')">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(specialOtherOptions)}">
+                    <td colspan="4" class="empty-message">No other special options available</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Enhanced delete confirmation
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to delete this diet option?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+            
+            // Enhanced back button functionality
+            const backButton = document.querySelector('.btn-back');
+            backButton.addEventListener('click', function(e) {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = '/'; // Fallback to home page
+                }
+            });
+        });
+    </script>
+</body>
+</html>

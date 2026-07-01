@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Diet Plans List</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* زر الرجوع */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            background-color: #3a5a8a;
+            transform: translateX(-5px) scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .back-button::before {
+            content: "←";
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .back-button:hover::before {
+            transform: translateX(-3px);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .diet-card {
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .diet-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .diet-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: none;
+        }
+        
+        .diet-header h3 {
+            margin: 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .category-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .option-item {
+            background-color: white;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: #212529;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+        
+        .text-end {
+            text-align: right;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            justify-content: center;
+        }
+        
+        .col-md-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+        
+        @media (max-width: 900px) {
+            .col-md-4 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .col-md-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            
+            .back-button {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .diet-card {
+                max-width: 95%;
+            }
+            
+            .text-end {
+                max-width: 95%;
+                text-align: center;
+            }
+            
+            .option-item {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .option-actions {
+                margin-left: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- زر الرجوع -->
+<button class="back-button" onclick="window.history.back()"></button>
+
+<div class="main-container">
+    <div class="content-wrapper">
+        <h1>Diet Normal List</h1>
+        
+        <div class="text-end">
+            <a th:href="@{/admin/diets/add}" class="btn btn-primary">Add New Diet</a>
+        </div>
+
+        <!-- Normal Diet -->
+        <div class="card diet-card">
+            <div class="card-header diet-header">
+                <h3>NORMAL DIET</h3>
+            </div>
+            <div class="card-body">
+                <div th:each="category : ${normalCategories}" class="mb-4">
+                    <h4 class="category-title" th:text="${category.name}"></h4>
+                    <div class="row">
+                        <div th:each="option : ${category.options}" class="col-md-4">
+                            <div class="option-item">
+                                <span th:text="${option.label}"></span>
+                                <div class="option-actions">
+                                    <a th:href="@{'/admin/diets/edit/' + ${option.id}}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a th:href="@{'/admin/diets/delete/' + ${option.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hypo Diet -->
+        <div class="card diet-card">
+            <div class="card-header diet-header">
+                <h3>HYPO DIET</h3>
+            </div>
+            <div class="card-body">
+                <div th:each="category : ${hypoCategories}" class="mb-4">
+                    <h4 class="category-title" th:text="${category.name}"></h4>
+                    <div class="row">
+                        <div th:each="option : ${category.options}" class="col-md-4">
+                            <div class="option-item">
+                                <span th:text="${option.label}"></span>
+                                <div class="option-actions">
+                                    <a th:href="@{'/admin/diets/edit/' + ${option.id}}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a th:href="@{'/admin/diets/delete/' + ${option.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other Diet -->
+        <div class="card diet-card">
+            <div class="card-header diet-header">
+                <h3>OTHER DIETS</h3>
+            </div>
+            <div class="card-body">
+                <div th:each="category : ${otherCategories}" class="mb-4">
+                    <h4 class="category-title" th:text="${category.name}"></h4>
+                    <div class="row">
+                        <div th:each="option : ${category.options}" class="col-md-4">
+                            <div class="option-item">
+                                <span th:text="${option.label}"></span>
+                                <div class="option-actions">
+                                    <a th:href="@{'/admin/diets/edit/' + ${option.id}}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a th:href="@{'/admin/diets/delete/' + ${option.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple confirmation for delete actions
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.btn-danger');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to delete this item?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // إضافة تأثير عند الضغط على زر الرجوع
+        const backButton = document.querySelector('.back-button');
+        backButton.addEventListener('mousedown', function() {
+            this.style.transform = 'translateX(-8px) scale(0.95)';
+        });
+        
+        backButton.addEventListener('mouseup', function() {
+            this.style.transform = '';
+        });
+        
+        backButton.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+    });
+</script>
+</body>
+</html>

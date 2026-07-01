@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(to right, #0062E6, #33AEFF);
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Berlin Sans FB Demi', sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+        .container {
+            max-width: 1000px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeInContainer 1s ease-out;
+            position: relative;
+            margin-bottom:50px;
+        }
+        @keyframes fadeInContainer {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #FFD700;
+            animation: fadeInText 1s ease-in-out;
+        }
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .card-body {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s;
+        }
+        .card:hover .card-body::before {
+            transform: scale(1);
+        }
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+            z-index: 1;
+        }
+        .row {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInRow 1s ease-out forwards;
+        }
+        @keyframes fadeInRow {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .row:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+        .row:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        .row:nth-child(3) {
+            animation-delay: 0.7s;
+        }
+        .floating-objects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .floating-objects .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        .circle.small {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-duration: 6s;
+            animation-delay: 2s;
+        }
+        .circle.medium {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            right: 20%;
+            animation-duration: 8s;
+            animation-delay: 4s;
+        }
+        .circle.large {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            right: 10%;
+            animation-duration: 10s;
+            animation-delay: 6s;
+        }
+        .card-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px; /* Adjust the height as needed */
+    background: rgba(255, 255, 255, 0.2); /* Optional: background color for image wrapper */
+    margin: 0 auto; /* Center the card horizontally */
+    text-align: center; /* Center the text horizontally */
+}
+
+.card-img {
+    max-width: 30%;
+    max-height: 50%;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd; /* Optional: to add a border below the image */
+}
+
+.image-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; /* Adjust as needed for spacing */
+    gap: 20px; /* Space between images */
+}
+
+.image-section img {
+    width: 30%; /* Adjust this value to control the size of the images */
+    height: auto;
+    border-radius: 15px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Welcome to the Hospital Management System</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=dietary'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">DIETARY.Department</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=nursery'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">NURSERY.WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=pediatrics'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">PEDIA.WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=MS'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">M.S. WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=MM'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">M.M. WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=ICU'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">I.C.U. WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=CCU'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">C.C.U. WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=OB'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">O.B. WARD</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=AKU'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">A.K.U. WARD</h5>
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=FS'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">F.S. WARD</h5>
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=FM'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">F.M. WARD</h5>
+                    </div>
+                </div>
+            </div>
+              <div class="col-md-4 mb-4">
+                <div class="card" onclick="window.location.href='/patients/login?department=management'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Management</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="image-section">
+    <img src="/images/1.png" alt="Left Image" class="card-img">
+    <img src="/images/vegetable.png" alt="Center Image" class="card-img">
+    <img src="/images/1.png" alt="Right Image" class="card-img">
+</div>
+        <div class="floating-objects">
+            <div class="circle small"></div>
+            <div class="circle medium"></div>
+            <div class="circle large"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
